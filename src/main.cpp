@@ -14,7 +14,7 @@ class Player {
 
 public:
     sf::Vector2f position; // X, Y
-    sf::View playerView{position, {750, 750}};
+    sf::View playerView{position, {650, 650}};
 
     sf::RectangleShape objOnScreen {sf::Vector2f(50, 50)};
 
