@@ -2,19 +2,19 @@
 #include <algorithm>
 #include <SFML/Graphics.hpp>
 
-float floatClamp(const float d, const float min, const float max) {
+float floatClamp(const float d, const float min, const float max) { // Thank you random man on stack overflow!
     const float t = d < min ? min : d;
     return t > max ? max : t;
 }
 
 class Player {
-private:
+
     int health {100};
     float moveSpeed {250.f};
 
 public:
     sf::Vector2f position; // X, Y
-    sf::View playerView{position, {500, 500}};
+    sf::View playerView{position, {750, 750}};
 
     sf::RectangleShape objOnScreen {sf::Vector2f(50, 50)};
 
@@ -47,10 +47,20 @@ public:
         position.y = floatClamp(position.y, objOnScreen.getSize().y / 2, 3000 - objOnScreen.getSize().y / 2);
 
         objOnScreen.setPosition(position);
-        playerView.setCenter(position); // Set View to Player Pos
+
+        // Need to Clamp playerView to map.
+
+        const sf::Vector2f camSize = playerView.getSize();
+
+        const float camX = floatClamp(position.x, camSize.x / 2, 3000 - camSize.x);
+        const float camY = floatClamp(position.y, camSize.y / 2, 3000 - camSize.y);
+
+        const sf::Vector2f camView {camX, camY};
+
+        playerView.setCenter(camView); // Set View to Player Pos
     }
 
-    void draw(sf::RenderWindow& window) {
+    void draw(sf::RenderWindow& window) const {
         window.draw(objOnScreen);
     }
 };
