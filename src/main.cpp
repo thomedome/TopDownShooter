@@ -90,43 +90,36 @@ public:
 
         // Handling Events
 
-        bool moving = false;
         sf::Vector2f movementVector;
 
         using namespace sf::Keyboard;
         if (isKeyPressed(Key::D)) {
             movementVector.x += 1;
-            moving = true;
         }
 
         if (isKeyPressed(Key::A)) {
             movementVector.x -= 1;
-            moving = true;
         }
 
         if (isKeyPressed(Key::S)) {
             movementVector.y += 1;
-            moving = true;
         }
 
         if (isKeyPressed(Key::W)) {
             movementVector.y -= 1;
-            moving = true;
-        }
-
-        if (!moving) {
-            playerState = Stationary;
-        } else {
-            playerState = Moving;
         }
 
         // Normalized Movement
         if (movementVector != sf::Vector2f(0, 0)) {
+            playerState = Moving;
+
             movementVector = movementVector.normalized();
 
             const sf::Vector2f nextPos {movementVector * (moveSpeed * dt)};
 
             position += nextPos;
+        } else {
+            playerState = Stationary;
         }
 
         // Clamp Player to Map
