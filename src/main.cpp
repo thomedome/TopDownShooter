@@ -30,7 +30,7 @@ class GameHandler { // Used to hold what objects needs updating + rendering, and
 
         bool showFPS {};
 
-        void tick(float dt) const;
+        void tick(float dt);
 
         GameHandler(Player &playerRef, sf::RenderWindow& windowRef);
 };
@@ -48,10 +48,10 @@ class Weapon {
 
         explicit Weapon(Player& owner) : Parent(owner) {
             objectOnScreen.setFillColor(sf::Color::Black);
-            objectOnScreen.setOrigin({-10.f, objectOnScreen.getSize().y / 2}); // This is a test weapon for now... unless i want to make cube warfare ;p
+            objectOnScreen.setOrigin({-10.f, objectOnScreen.getSize().y / 2}); // This is a test weapon for now... unless I want to make cube warfare ;p
         }
 
-        void fireBullet(sf::Vector2f mousePosition);
+        void fireBullet() const;
 
         void lookAtMouse(sf::Vector2f mousePosition);
 
@@ -86,7 +86,7 @@ public:
         heldWeapon.objectOnScreen.setPosition(position);
     }
 
-    void update(const float dt, sf::RenderWindow &window) {
+    void update(const float dt, const sf::RenderWindow &window) {
 
         // Handling Events
 
@@ -94,23 +94,23 @@ public:
 
         using namespace sf::Keyboard;
         if (isKeyPressed(Key::D)) {
-            movementVector.x += 1;
+            movementVector.x += 1.f;
         }
 
         if (isKeyPressed(Key::A)) {
-            movementVector.x -= 1;
+            movementVector.x -= 1.f;
         }
 
         if (isKeyPressed(Key::S)) {
-            movementVector.y += 1;
+            movementVector.y += 1.f;
         }
 
         if (isKeyPressed(Key::W)) {
-            movementVector.y -= 1;
+            movementVector.y -= 1.f;
         }
 
         // Normalized Movement
-        if (movementVector != sf::Vector2f(0, 0)) {
+        if (movementVector != sf::Vector2f(0.f, 0.f)) {
             playerState = Moving;
 
             movementVector = movementVector.normalized();
@@ -138,16 +138,14 @@ public:
 
         const sf::Vector2f camView {camX, camY};
 
-        playerView.setCenter(camView); // Set View to Player Pos
-
         // Get Mouse Pos on screen, then set mousePos to the co-ords in game.
 
         const sf::Vector2i mouseOnScreen = sf::Mouse::getPosition(window);
         mousePos = window.mapPixelToCoords(mouseOnScreen);
 
-        heldWeapon.update(mousePos);
-        heldWeapon.draw(window);
+        playerView.setCenter(camView); // Set View to Player Pos
 
+        heldWeapon.update(mousePos);
     }
 
     void draw(sf::RenderWindow& window) const {
@@ -175,13 +173,8 @@ public:
     {
         // Calculating the direction vector (Target Pos - Current Pos)
 
-        std::cout << destination.x << destination.y << std::endl;
-        std::cout << position.x << position.y << std::endl;
-
         dirX = destination.x - position.x;
         dirY = destination.y - position.y;
-
-        std::cout << dirX << "," << dirY << std::endl;
 
         objectOnScreen.setFillColor(sf::Color::Yellow);
         objectOnScreen.setOutlineColor(sf::Color::Black);
@@ -244,13 +237,11 @@ void Weapon::update(const sf::Vector2f mousePosition) {
     objectOnScreen.setPosition(Parent.position);
 }
 
-void Weapon::fireBullet(const sf::Vector2f mousePosition) {
-    std::cout << "fireBullet" << std::endl;
+void Weapon::fireBullet() const {
     Bullet newBullet(Parent.position, *this);
 }
 
-void GameHandler::tick(const float dt) const {
-    // std::cout << "Tick" << std::endl;
+void GameHandler::tick(const float dt) {
     std::vector<Bullet> survivors;
     survivors.reserve(player.ownedBullets.size()); // Pre-allocate memory for speed
 
@@ -279,6 +270,10 @@ int main() {
     const sf::Sprite mapSprite(mapTexture);
 
     sf::Text FPSObj {font, "FPS: XX"};
+    float dtAccum {0.f}; // fps timer
+    float fpsTime {.5f};
+    float frameCount {0}; // float for the sake of narrowing conversion
+    int fps {};
 
     sf::Clock dtClock;
 
@@ -300,14 +295,12 @@ int main() {
 
         if (keyPressed.scancode == sf::Keyboard::Scancode::F) {
             gameHandler.showFPS = !gameHandler.showFPS;
-            std::cout << "FPS " << std::to_string(gameHandler.showFPS);
         }
     };
 
     const auto onMousePressed = [&](const sf::Event::MouseButtonPressed& mouseButtonPressed) {
         if (mouseButtonPressed.button == sf::Mouse::Button::Left) {
-            player.heldWeapon.fireBullet(player.mousePos);
-            std::cout << player.mousePos.x << ", " << player.mousePos.y << std::endl;
+            player.heldWeapon.fireBullet();
         }
     };
 
@@ -317,9 +310,15 @@ int main() {
 
         const float dt = dtClock.restart().asSeconds();
 
-        const auto fps = 1 / dt;
 
-        // std::cout << "FPS: " << fps << std::endl;
+        frameCount += 1;
+        dtAccum += dt;
+
+        if (dtAccum >= fpsTime) {
+            fps = static_cast<int>(std::round(frameCount / fpsTime));
+            frameCount = 1;
+            dtAccum -= fpsTime;
+        }
 
         window.handleEvents(onClose, onKeyPressed, onMousePressed); // One Off Keycodes
 
@@ -335,7 +334,7 @@ int main() {
         if (gameHandler.showFPS) {
             window.setView(window.getDefaultView());
 
-            FPSObj.setString("FPS: " + std::to_string(std::round(fps)));
+            FPSObj.setString("FPS: " + std::to_string(static_cast<int>(std::round(fps))));
             FPSObj.setPosition({10.f, 10.f});
 
             window.draw(FPSObj);
