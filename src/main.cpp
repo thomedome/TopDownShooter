@@ -1,7 +1,8 @@
+#include <cmath>
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
-#include <cmath>
+#include <algorithm>
 
 float floatClamp(const float d, const float min, const float max) { // Thank you random man on stack overflow!
     const float t = d < min ? min : d;
@@ -12,10 +13,24 @@ class Player;
 
 class Bullet;
 
+class GameHandler { // Used to hold what objects needs updating + rendering, and have an overarching tick method to update everything.
+
+    public:
+        Player& player; // Contains Bullet Vector
+        // Enemies go here eventually...
+
+        sf::RenderWindow& window;
+
+        void tick(float dt) const;
+
+        GameHandler(Player &playerRef, sf::RenderWindow& windowRef);
+};
+
 class Weapon {
     public:
         int damage {};
-        int Range {};
+        int Range {500};
+        float projectileVelocity {250.f};
 
         Player& Parent;
         const std::string name {};
@@ -26,6 +41,8 @@ class Weapon {
             objectOnScreen.setFillColor(sf::Color::Black);
             objectOnScreen.setOrigin({-10.f, objectOnScreen.getSize().y / 2}); // This is a test weapon for now... unless i want to make cube warfare ;p
         }
+
+        void fireBullet(sf::Vector2f mousePosition);
 
         void lookAtMouse(sf::Vector2f mousePosition);
 
@@ -41,15 +58,19 @@ class Player {
     int health {100};
     float moveSpeed {250.f};
 
+
+
 public:
     Weapon heldWeapon;
-
+    std::vector<Bullet> ownedBullets;
     sf::Vector2f mousePos;
 
     sf::Vector2f position; // X, Y
     sf::View playerView{position, {650, 650}};
 
     sf::RectangleShape objOnScreen {sf::Vector2f(50, 50)};
+
+    GameHandler* ghRef {nullptr};
 
     Player() : heldWeapon(*this), position({1500, 1500}){
 
@@ -117,14 +138,57 @@ public:
 class Bullet {
 
 public:
-    Player owner;
+    Player& owner;
+
+    bool destroyFlag {false};
+
+    Bullet(const sf::Vector2f posToSpawn, const Weapon& GunOwner) // Constructor
+    : owner(GunOwner.Parent), position(posToSpawn), Range(GunOwner.Range), damage(GunOwner.damage), moveSpeed(GunOwner.projectileVelocity), destination(owner.mousePos)
+    {
+        // Calculating the direction vector (Target Pos - Current Pos)
+
+        dirX = destination.x - position.x;
+        dirY = destination.y - position.y;
+
+        std::cout << dirX << "," << dirY << std::endl;
+
+        owner.ownedBullets.push_back(*this);
+    };
+
+    void update(const float dt) {
+
+        // Get Distance via Pythagorean Theorem
+        const float dist = std::sqrt(std::pow(dirX, 2.f) + std::pow(dirY, 2.f));
+
+        // Step Size for this frame.
+        const float step = moveSpeed * dt;
+
+        if (dist <= step || dist == 0.0f) {
+            destroyFlag = true;
+            return;
+        }
+
+        std::cout << "upd" << std::endl;
+
+        position = sf::Vector2f(position.x + (dirX / dist) * step, position.y + (dirY / dist) * step);
+        objectOnScreen.setPosition(position);
+    }
+
+    void draw(sf::RenderWindow& window) const {
+        window.draw(objectOnScreen);
+    }
 
 private:
-    sf::RectangleShape objectOnScreen;
+    sf::RectangleShape objectOnScreen{sf::Vector2f(5, 5)};
     sf::Vector2f position;
 
     int Range {}; // Added from constructor
     int damage {}; // ^
+    float moveSpeed {300.f}; // ^
+    sf::Vector2f destination{};
+
+    float dirX {};
+    float dirY {};
 };
 
 void Weapon::lookAtMouse(const sf::Vector2f mousePosition) {
@@ -143,6 +207,38 @@ void Weapon::update(const sf::Vector2f mousePosition) {
     objectOnScreen.setPosition(Parent.position);
 }
 
+void Weapon::fireBullet(const sf::Vector2f mousePosition) {
+    std::cout << "fireBullet" << std::endl;
+    Bullet newBullet(mousePosition, *this);
+}
+
+void GameHandler::tick(const float dt) const {
+    // std::cout << "Tick" << std::endl;
+    std::vector<Bullet> survivors;
+    survivors.reserve(player.ownedBullets.size()); // Pre-allocate memory for speed
+
+    // 1. Filter out dead bullets by moving survivors to a temporary vector
+    for (auto& bullet : player.ownedBullets) {
+        if (!bullet.destroyFlag) {
+            survivors.push_back(std::move(bullet));
+            std::cout << "destroyed" << std::endl;
+        }
+    }
+
+    // 2. Instantly swap the vector pointer buffers (O(1) complexity, no bullet copying!)
+    player.ownedBullets.swap(survivors);
+
+    // 3. Update the remaining bullets that survived
+    for (auto& bullet : player.ownedBullets) {
+        bullet.update(dt);
+        bullet.draw(window);
+    }
+}
+
+GameHandler::GameHandler(Player& playerRef, sf::RenderWindow& windowRef) : player(playerRef), window(windowRef) {
+    player.ghRef = this;
+}
+
 int main() {
     sf::RenderWindow window(sf::VideoMode({500, 500}), "Top Down Shooter");
 
@@ -152,6 +248,7 @@ int main() {
     sf::Clock dtClock;
 
     Player player;
+    const GameHandler gameHandler(player, window);
 
     const auto onClose = [&window](const sf::Event::Closed&)
     {
@@ -169,10 +266,10 @@ int main() {
 
     const auto onMousePressed = [&](const sf::Event::MouseButtonPressed& mouseButtonPressed) {
         if (mouseButtonPressed.button == sf::Mouse::Button::Left) {
+            player.heldWeapon.fireBullet(player.mousePos);
             std::cout << player.mousePos.x << ", " << player.mousePos.y << std::endl;
         }
     };
-
 
     window.setVerticalSyncEnabled(true); // VSync
 
@@ -180,14 +277,20 @@ int main() {
 
         const float dt = dtClock.restart().asSeconds();
 
+        const auto fps = 1 / dt;
+
+        // std::cout << "FPS: " << fps << std::endl;
+
         window.handleEvents(onClose, onKeyPressed, onMousePressed); // One Off Keycodes
 
         window.setView(player.playerView);
         window.clear(sf::Color::Black);
-        window.draw(mapSprite); // Draw the map
+        window.draw(mapSprite); // Draw the map lowest
 
         player.update(dt, window);
-        player.draw(window); // Draw the player
+        player.draw(window); // Draw the player + gun
+
+        gameHandler.tick(dt);
 
         window.display();
     }
