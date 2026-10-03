@@ -58,8 +58,6 @@ class Player {
     int health {100};
     float moveSpeed {250.f};
 
-
-
 public:
     Weapon heldWeapon;
     std::vector<Bullet> ownedBullets;
@@ -140,12 +138,20 @@ class Bullet {
 public:
     Player& owner;
 
+    float dirX {};
+    float dirY {};
+
+    float distanceTravelled {};
+
     bool destroyFlag {false};
 
     Bullet(const sf::Vector2f posToSpawn, const Weapon& GunOwner) // Constructor
     : owner(GunOwner.Parent), position(posToSpawn), Range(GunOwner.Range), damage(GunOwner.damage), moveSpeed(GunOwner.projectileVelocity), destination(owner.mousePos)
     {
         // Calculating the direction vector (Target Pos - Current Pos)
+
+        std::cout << destination.x << destination.y << std::endl;
+        std::cout << position.x << position.y << std::endl;
 
         dirX = destination.x - position.x;
         dirY = destination.y - position.y;
@@ -163,10 +169,13 @@ public:
         // Step Size for this frame.
         const float step = moveSpeed * dt;
 
-        if (dist <= step || dist == 0.0f) {
+        distanceTravelled += step;
+
+        if (dist <= step || dist == 0.0f || distanceTravelled >= static_cast<float>(Range)) {
             destroyFlag = true;
             return;
         }
+
 
         std::cout << "upd" << std::endl;
 
@@ -187,8 +196,7 @@ private:
     float moveSpeed {300.f}; // ^
     sf::Vector2f destination{};
 
-    float dirX {};
-    float dirY {};
+
 };
 
 void Weapon::lookAtMouse(const sf::Vector2f mousePosition) {
@@ -209,7 +217,7 @@ void Weapon::update(const sf::Vector2f mousePosition) {
 
 void Weapon::fireBullet(const sf::Vector2f mousePosition) {
     std::cout << "fireBullet" << std::endl;
-    Bullet newBullet(mousePosition, *this);
+    Bullet newBullet(Parent.position, *this);
 }
 
 void GameHandler::tick(const float dt) const {
@@ -217,18 +225,14 @@ void GameHandler::tick(const float dt) const {
     std::vector<Bullet> survivors;
     survivors.reserve(player.ownedBullets.size()); // Pre-allocate memory for speed
 
-    // 1. Filter out dead bullets by moving survivors to a temporary vector
     for (auto& bullet : player.ownedBullets) {
         if (!bullet.destroyFlag) {
             survivors.push_back(std::move(bullet));
-            std::cout << "destroyed" << std::endl;
         }
     }
 
-    // 2. Instantly swap the vector pointer buffers (O(1) complexity, no bullet copying!)
     player.ownedBullets.swap(survivors);
 
-    // 3. Update the remaining bullets that survived
     for (auto& bullet : player.ownedBullets) {
         bullet.update(dt);
         bullet.draw(window);
