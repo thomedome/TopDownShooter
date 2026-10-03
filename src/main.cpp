@@ -10,10 +10,12 @@ float floatClamp(const float d, const float min, const float max) { // Thank you
 
 class Player;
 
+class Bullet;
+
 class Weapon {
     public:
         int damage {};
-        int TTL {};
+        int Range {};
 
         Player& Parent;
         const std::string name {};
@@ -49,7 +51,7 @@ public:
 
     sf::RectangleShape objOnScreen {sf::Vector2f(50, 50)};
 
-    Player() : position({1500, 1500}), heldWeapon(*this){
+    Player() : heldWeapon(*this), position({1500, 1500}){
 
         objOnScreen.setOrigin(objOnScreen.getLocalBounds().getCenter());
         heldWeapon.objectOnScreen.setPosition(position);
@@ -110,6 +112,19 @@ public:
         window.draw(objOnScreen);
         heldWeapon.draw(window);
     }
+};
+
+class Bullet {
+
+public:
+    Player owner;
+
+private:
+    sf::RectangleShape objectOnScreen;
+    sf::Vector2f position;
+
+    int Range {}; // Added from constructor
+    int damage {}; // ^
 };
 
 void Weapon::lookAtMouse(const sf::Vector2f mousePosition) {
