@@ -4,10 +4,17 @@
 #include <SFML/Window/Event.hpp>
 #include <algorithm>
 
+sf::Font font("assets/fonts/LiberationSans-Regular.ttf");
+
 float floatClamp(const float d, const float min, const float max) { // Thank you random man on stack overflow!
     const float t = d < min ? min : d;
     return t > max ? max : t;
 }
+
+enum PlayerState {
+    Stationary,
+    Moving,
+};
 
 class Player;
 
@@ -21,6 +28,8 @@ class GameHandler { // Used to hold what objects needs updating + rendering, and
 
         sf::RenderWindow& window;
 
+        bool showFPS {};
+
         void tick(float dt) const;
 
         GameHandler(Player &playerRef, sf::RenderWindow& windowRef);
@@ -30,7 +39,7 @@ class Weapon {
     public:
         int damage {};
         int Range {500};
-        float projectileVelocity {250.f};
+        float projectileVelocity {300.f};
 
         Player& Parent;
         const std::string name {};
@@ -55,16 +64,17 @@ class Weapon {
 
 class Player {
 
-    int health {100};
-    float moveSpeed {250.f};
-
 public:
     Weapon heldWeapon;
     std::vector<Bullet> ownedBullets;
     sf::Vector2f mousePos;
 
+    int health {100};
+    float moveSpeed {250.f};
+
+    PlayerState playerState {Stationary};
     sf::Vector2f position; // X, Y
-    sf::View playerView{position, {650, 650}};
+    sf::View playerView{position, {750, 750}};
 
     sf::RectangleShape objOnScreen {sf::Vector2f(50, 50)};
 
@@ -80,21 +90,43 @@ public:
 
         // Handling Events
 
+        bool moving = false;
+        sf::Vector2f movementVector;
+
         using namespace sf::Keyboard;
         if (isKeyPressed(Key::D)) {
-            position.x += (moveSpeed * dt);
+            movementVector.x += 1;
+            moving = true;
         }
 
         if (isKeyPressed(Key::A)) {
-            position.x -= (moveSpeed * dt);
+            movementVector.x -= 1;
+            moving = true;
         }
 
         if (isKeyPressed(Key::S)) {
-            position.y += (moveSpeed * dt);
+            movementVector.y += 1;
+            moving = true;
         }
 
         if (isKeyPressed(Key::W)) {
-            position.y -= (moveSpeed * dt);
+            movementVector.y -= 1;
+            moving = true;
+        }
+
+        if (!moving) {
+            playerState = Stationary;
+        } else {
+            playerState = Moving;
+        }
+
+        // Normalized Movement
+        if (movementVector != sf::Vector2f(0, 0)) {
+            movementVector = movementVector.normalized();
+
+            const sf::Vector2f nextPos {movementVector * (moveSpeed * dt)};
+
+            position += nextPos;
         }
 
         // Clamp Player to Map
@@ -108,8 +140,8 @@ public:
 
         const sf::Vector2f camSize = playerView.getSize();
 
-        const float camX = floatClamp(position.x, camSize.x / 2, 3000 - camSize.x);
-        const float camY = floatClamp(position.y, camSize.y / 2, 3000 - camSize.y);
+        const float camX = floatClamp(position.x, camSize.x / 2, 3000 - camSize.x / 2);
+        const float camY = floatClamp(position.y, camSize.y / 2, 3000 - camSize.y / 2);
 
         const sf::Vector2f camView {camX, camY};
 
@@ -119,8 +151,6 @@ public:
 
         const sf::Vector2i mouseOnScreen = sf::Mouse::getPosition(window);
         mousePos = window.mapPixelToCoords(mouseOnScreen);
-
-        // std::cout << mousePos.x << ", " << mousePos.y << std::endl;
 
         heldWeapon.update(mousePos);
         heldWeapon.draw(window);
@@ -137,6 +167,8 @@ class Bullet {
 
 public:
     Player& owner;
+
+    bool playerMomentum {false};
 
     float dirX {};
     float dirY {};
@@ -158,6 +190,14 @@ public:
 
         std::cout << dirX << "," << dirY << std::endl;
 
+        objectOnScreen.setFillColor(sf::Color::Yellow);
+        objectOnScreen.setOutlineColor(sf::Color::Black);
+        objectOnScreen.setOutlineThickness(1.f);
+
+        if (owner.playerState == Moving) {
+            moveSpeed += owner.moveSpeed;
+        }
+
         owner.ownedBullets.push_back(*this);
     };
 
@@ -167,6 +207,7 @@ public:
         const float dist = std::sqrt(std::pow(dirX, 2.f) + std::pow(dirY, 2.f));
 
         // Step Size for this frame.
+
         const float step = moveSpeed * dt;
 
         distanceTravelled += step;
@@ -175,9 +216,6 @@ public:
             destroyFlag = true;
             return;
         }
-
-
-        std::cout << "upd" << std::endl;
 
         position = sf::Vector2f(position.x + (dirX / dist) * step, position.y + (dirY / dist) * step);
         objectOnScreen.setPosition(position);
@@ -195,8 +233,6 @@ private:
     int damage {}; // ^
     float moveSpeed {300.f}; // ^
     sf::Vector2f destination{};
-
-
 };
 
 void Weapon::lookAtMouse(const sf::Vector2f mousePosition) {
@@ -244,15 +280,17 @@ GameHandler::GameHandler(Player& playerRef, sf::RenderWindow& windowRef) : playe
 }
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode({500, 500}), "Top Down Shooter");
+    sf::RenderWindow window(sf::VideoMode({750, 750}), "Top Down Shooter");
 
     const sf::Texture mapTexture {"assets/testMap.jpg"};
     const sf::Sprite mapSprite(mapTexture);
 
+    sf::Text FPSObj {font, "FPS: XX"};
+
     sf::Clock dtClock;
 
     Player player;
-    const GameHandler gameHandler(player, window);
+    GameHandler gameHandler(player, window);
 
     const auto onClose = [&window](const sf::Event::Closed&)
     {
@@ -260,11 +298,16 @@ int main() {
         exit(0);
     };
 
-    const auto onKeyPressed = [&window](const sf::Event::KeyPressed& keyPressed)
+    const auto onKeyPressed = [&window, &gameHandler](const sf::Event::KeyPressed& keyPressed)
     {
         if (keyPressed.scancode == sf::Keyboard::Scancode::Escape) {
             window.close();
             exit(0);
+        }
+
+        if (keyPressed.scancode == sf::Keyboard::Scancode::F) {
+            gameHandler.showFPS = !gameHandler.showFPS;
+            std::cout << "FPS " << std::to_string(gameHandler.showFPS);
         }
     };
 
@@ -295,6 +338,15 @@ int main() {
         player.draw(window); // Draw the player + gun
 
         gameHandler.tick(dt);
+
+        if (gameHandler.showFPS) {
+            window.setView(window.getDefaultView());
+
+            FPSObj.setString("FPS: " + std::to_string(std::round(fps)));
+            FPSObj.setPosition({10.f, 10.f});
+
+            window.draw(FPSObj);
+        }
 
         window.display();
     }
