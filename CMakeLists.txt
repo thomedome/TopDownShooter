@@ -19,6 +19,13 @@ FetchContent_MakeAvailable(SFML)
 
 add_executable(TopDownShooter
         src/main.cpp
+        src/classes/Entity.cpp
+        src/classes/Entity.h
+        src/classes/Player.cpp
+        src/classes/Player.h
+        src/classes/enums.h
+        src/classes/Weapon.cpp
+        src/classes/Weapon.h
 )
 
 add_custom_command(

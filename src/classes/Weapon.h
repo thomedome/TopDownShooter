@@ -1,0 +1,9 @@
+#ifndef TOPDOWNSHOOTER_WEAPON_H
+#define TOPDOWNSHOOTER_WEAPON_H
+
+
+class Weapon {
+};
+
+
+#endif //TOPDOWNSHOOTER_WEAPON_H
