@@ -14,27 +14,26 @@
 class GameHandler;
 class Weapon;
 
-class Player : Entity {
+class Player : public Entity {
 public:
     PlayerState getPlayerState();
+
+    Player(sf::Vector2f spawnPosition);
 
 private:
     sf::Vector2f mousePos;
     Weapon heldWeapon;
     PlayerState playerState {Stationary};
+    sf::View playerView{mapPosition, {750, 750}};
+    sf::RectangleShape objOnScreen {sf::Vector2f(50, 50)};
 };
 
-class Player {
+// class Player {
 
 public:
 
     // std::vector<Bullet> ownedBullets; NEEDS TO BE MOVED TO GAMEHANDLER
 
-    sf::View playerView{position, {750, 750}};
-
-    sf::RectangleShape objOnScreen {sf::Vector2f(50, 50)};
-
-    GameHandler* ghRef {nullptr};
 
     Player() : heldWeapon(*this), position({1500, 1500}){
 

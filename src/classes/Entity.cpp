@@ -3,3 +3,15 @@
 //
 
 #include "Entity.h"
+
+int Entity::getHealth() const {
+    return health;
+}
+
+std::string Entity::getName() {
+    return name;
+}
+
+bool Entity::isAlive() const {
+    return health > 0;
+}

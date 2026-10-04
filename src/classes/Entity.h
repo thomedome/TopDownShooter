@@ -11,9 +11,9 @@
 class Entity {
 public:
     // Helper Functions
-    int getHealth();
+    [[nodiscard]] int getHealth() const;
     std::string getName();
-    bool isAlive();
+    [[nodiscard]] bool isAlive() const;
 
 protected:
     float moveSpeed {250.f};

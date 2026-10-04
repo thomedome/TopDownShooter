@@ -3,3 +3,11 @@
 //
 
 #include "Player.h"
+
+Player::Player(sf::Vector2f spawnPosition) {
+
+    mapPosition = spawnPosition;
+    objOnScreen.setOrigin(objOnScreen.getLocalBounds().getCenter());
+    heldWeapon = this*;
+    // heldWeapon.objectOnScreen.setPosition(position);
+}
