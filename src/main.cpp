@@ -65,7 +65,7 @@ class Weapon {
 class Player {
 
 public:
-    Weapon heldWeapon;
+    Weapon *heldWeapon;
     std::vector<Bullet> ownedBullets;
     sf::Vector2f mousePos;
 
@@ -158,8 +158,6 @@ class Bullet {
 
 public:
     Player& owner;
-
-    bool playerMomentum {false};
 
     float dirX {};
     float dirY {};

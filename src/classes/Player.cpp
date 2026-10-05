@@ -4,10 +4,95 @@
 
 #include "Player.h"
 
-Player::Player(sf::Vector2f spawnPosition) {
+#include <algorithm>
 
+#include "Weapon.h"
+
+Player::Player(const sf::Vector2f spawnPosition) : heldWeapon(*this) {
     mapPosition = spawnPosition;
     objOnScreen.setOrigin(objOnScreen.getLocalBounds().getCenter());
-    heldWeapon = this*;
-    // heldWeapon.objectOnScreen.setPosition(position);
+    heldWeapon.objectOnScreen.setPosition(mapPosition);
+}
+
+PlayerState Player::getPlayerState() const {
+    return playerState;
+}
+
+void Player::update(const float dt, const sf::RenderWindow &window) {
+
+    // Handling Events
+
+    sf::Vector2f movementVector;
+
+    using namespace sf::Keyboard;
+    if (isKeyPressed(Key::D)) {
+        movementVector.x += 1.f;
+    }
+
+    if (isKeyPressed(Key::A)) {
+        movementVector.x -= 1.f;
+    }
+
+    if (isKeyPressed(Key::S)) {
+        movementVector.y += 1.f;
+    }
+
+    if (isKeyPressed(Key::W)) {
+        movementVector.y -= 1.f;
+    }
+
+    // Normalized Movement
+    if (movementVector != sf::Vector2f(0.f, 0.f)) {
+        playerState = Moving;
+
+        movementVector = movementVector.normalized();
+
+        const sf::Vector2f nextPos {movementVector * (moveSpeed * dt)};
+
+        mapPosition += nextPos;
+    } else {
+        playerState = Stationary;
+    }
+
+    // Clamp Player to Map
+
+    mapPosition.x = std::clamp(mapPosition.x, objOnScreen.getSize().x / 2, 3000 - objOnScreen.getSize().x / 2);
+    mapPosition.y = std::clamp(mapPosition.y, objOnScreen.getSize().y / 2, 3000 - objOnScreen.getSize().y / 2);
+
+    objOnScreen.setPosition(mapPosition);
+
+    // Need to Clamp playerView to map.
+
+    const sf::Vector2f camSize = playerView.getSize();
+
+    const float camX = std::clamp(mapPosition.x, camSize.x / 2, 3000 - camSize.x / 2);
+    const float camY = std::clamp(mapPosition.y, camSize.y / 2, 3000 - camSize.y / 2);
+
+    const sf::Vector2f camView {camX, camY};
+
+    // Get Mouse Pos on screen, then set mousePos to the co-ords in game.
+
+    const sf::Vector2i mouseOnScreen = sf::Mouse::getPosition(window);
+    mousePos = window.mapPixelToCoords(mouseOnScreen);
+
+    playerView.setCenter(camView); // Set View to Player Pos
+
+    heldWeapon.update(mousePos);
+}
+
+void Player::draw(sf::RenderWindow& window) {
+    window.draw(objOnScreen);
+    heldWeapon.draw(window);
+}
+
+sf::Vector2f Player::getMousePosition() const {
+    return mousePos;
+}
+
+sf::Vector2f Player::getPosition() const {
+    return mapPosition;
+}
+
+sf::View Player::getPlayerView() const {
+    return playerView;
 }

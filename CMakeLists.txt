@@ -26,6 +26,13 @@ add_executable(TopDownShooter
         src/classes/enums.h
         src/classes/Weapon.cpp
         src/classes/Weapon.h
+        src/classes/GameHandler.cpp
+        src/classes/GameHandler.h
+        src/classes/Bullet.cpp
+        src/classes/Bullet.h
+        src/classes/common.h
+        src/classes/ProjectileManager.cpp
+        src/classes/ProjectileManager.h
 )
 
 add_custom_command(

@@ -1,0 +1,23 @@
+//
+// Created by win11 on 05/10/2026.
+//
+
+#ifndef TOPDOWNSHOOTER_PROJECTILEMANAGE_H
+#define TOPDOWNSHOOTER_PROJECTILEMANAGE_H
+
+#include "Bullet.h"
+#include "common.h"
+#include "GameHandler.h"
+#include <vector>
+
+class ProjectileManager {
+    std::vector<Bullet> AllBullets;
+    GameHandler& ghRef;
+public:
+    void addBullet(const BulletData& bulletData);
+    void updateProjectiles(const float dt, sf::RenderWindow& window);
+
+    ProjectileManager(GameHandler& gh);
+};
+
+#endif //TOPDOWNSHOOTER_PROJECTILEMANAGE_H
