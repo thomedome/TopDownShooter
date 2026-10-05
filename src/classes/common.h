@@ -7,6 +7,10 @@
 #include "SFML/System/Vector2.hpp"
 
 // 1D - theyre squares though so both applicable
+
+constexpr int mapHeight = 3000;
+constexpr int mapWidth = 3000;
+
 constexpr int spacialCellSize = 100;
 
 struct BulletData {

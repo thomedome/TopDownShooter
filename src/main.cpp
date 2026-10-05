@@ -286,6 +286,9 @@ int main() {
     Enemy testEnemy {sf::Vector2f(1000, 1500), player};
     gameHandler.createEnemy(testEnemy);
 
+    Enemy testEnemy2 {sf::Vector2f(2000, 1500), player};
+    gameHandler.createEnemy(testEnemy2);
+
     const auto onClose = [&window](const sf::Event::Closed&)
     {
         window.close();

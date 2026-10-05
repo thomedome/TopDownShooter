@@ -30,3 +30,8 @@ void ProjectileManager::updateProjectiles(const float dt, sf::RenderWindow& wind
         bullet.draw(window);
     }
 }
+
+
+std::vector<Bullet>& ProjectileManager::getBullets() {
+    return AllBullets;
+}

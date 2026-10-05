@@ -14,7 +14,7 @@ class GameHandler { // Used to hold what objects needs updating + rendering, and
 
 public:
     Player& player;
-    std::vector<Enemy> allEnemies;
+    std::vector<std::unique_ptr<Enemy>> allEnemies;
     // Enemies go here eventually...
 
     ProjectileManager projectileManager{*this};
@@ -26,7 +26,7 @@ public:
     void createEnemy(const Enemy& newEnemy);
     std::vector<Enemy*> getEnemiesInSpatialCell(sf::Vector2i Cell);
 
-    std::vector<std::vector<std::vector<Enemy*>>> spatialGridCells {}; // 100 x 100 cell size. makes 30 cells for now.
+    std::vector<Enemy*> spatialGridCells [mapWidth / spacialCellSize][mapHeight / spacialCellSize] {}; // 100 x 100 cell size. makes 30 cells for now.
 
     // Cells will be start, start + size to index. so Cell [0, 0] will be between (0, 100)x and (0, 100)y
 

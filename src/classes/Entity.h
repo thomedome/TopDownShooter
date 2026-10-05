@@ -14,13 +14,16 @@ public:
     [[nodiscard]] int getHealth() const;
     std::string getName();
     [[nodiscard]] bool isAlive() const;
-    sf::Vector2i getSpatialCell() const;
+    [[nodiscard]] sf::Vector2i getSpatialCell() const;
+    [[nodiscard]] sf::Vector2f getPosition() const;
+    void setPosition(const sf::Vector2f& position);
+    void takeDamage(int damage);
 
 protected:
     float moveSpeed {250.f};
     sf::Vector2f mapPosition {};
     sf::Vector2i spatialCell{};
-    int health {};
+    int health {100};
     int maxHealth {};
     std::string name {};
 };

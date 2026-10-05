@@ -19,6 +19,8 @@ public:
     void addBullet(Weapon& weapon);
     void updateProjectiles(const float dt, sf::RenderWindow& window);
 
+    std::vector<Bullet>& getBullets();
+
     ProjectileManager(GameHandler& gh);
 };
 

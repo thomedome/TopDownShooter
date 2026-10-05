@@ -19,3 +19,17 @@ bool Entity::isAlive() const {
 sf::Vector2i Entity::getSpatialCell() const {
     return spatialCell;
 }
+
+void Entity::takeDamage(int damage) {
+    if (isAlive()) {
+        health -= damage;
+    }
+}
+
+sf::Vector2f Entity::getPosition() const {
+    return mapPosition;
+}
+
+void Entity::setPosition(const sf::Vector2f& position) {
+    mapPosition = position;
+}

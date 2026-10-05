@@ -21,6 +21,7 @@ public:
 
     bool destroyFlag {false};
 
+
     Bullet(const BulletData& bd) // Constructor
     : position(bd.posToSpawn), Range(bd.Range), damage(bd.damage), moveSpeed(bd.moveSpeed), destination(bd.destination)
     {
@@ -39,33 +40,17 @@ public:
 
     };
 
-    void update(const float dt) {
+    sf::Vector2i getSpatialCell() const;
+    void update(const float dt);
+    void draw(sf::RenderWindow& window) const ;
+    sf::FloatRect getBounds();
 
-        // Get Distance via Pythagorean Theorem
-        const float dist = std::sqrt(std::pow(dirX, 2.f) + std::pow(dirY, 2.f));
-
-        // Step Size for this frame.
-
-        const float step = moveSpeed * dt;
-
-        distanceTravelled += step;
-
-        if (dist <= step || dist == 0.0f || distanceTravelled >= static_cast<float>(Range)) {
-            destroyFlag = true;
-            return;
-        }
-
-        position = sf::Vector2f(position.x + (dirX / dist) * step, position.y + (dirY / dist) * step);
-        objectOnScreen.setPosition(position);
-    }
-
-    void draw(sf::RenderWindow& window) const {
-        window.draw(objectOnScreen);
-    }
+    int getDamage();
 
 private:
     sf::RectangleShape objectOnScreen{sf::Vector2f(5, 5)};
     sf::Vector2f position;
+    sf::Vector2i SpatialCell {0, 0};
 
     int Range {}; // Added from constructor
     int damage {}; // ^

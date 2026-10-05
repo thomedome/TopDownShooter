@@ -12,7 +12,7 @@ class Weapon {
     Player& Parent;
 
 public:
-    int damage {};
+    int damage {10};
     int Range {500};
     float projectileVelocity {300.f};
 

@@ -17,9 +17,11 @@ class Enemy : public Entity {
 
         void update(const float dt);
         void draw(sf::RenderWindow& window);
+        sf::FloatRect getBounds() const;
 
     private:
 };
+
 
 
 #endif //TOPDOWNSHOOTER_ENEMY_H

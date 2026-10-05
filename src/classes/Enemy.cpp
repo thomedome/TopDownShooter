@@ -12,6 +12,7 @@ Enemy::Enemy(const sf::Vector2f spawnPosition, Player& Target) : Target(Target) 
     objOnScreen.setOrigin(objOnScreen.getLocalBounds().getCenter());
     moveSpeed = {200.f};
     objOnScreen.setFillColor(sf::Color::Red);
+    objOnScreen.setOutlineColor(sf::Color::White);
 }
 
 void Enemy::update(const float dt) {
@@ -29,15 +30,18 @@ void Enemy::update(const float dt) {
     if (dist <= step || dist == 0.0f) {
         return;
     }
+    mapPosition = sf::Vector2f(mapPosition.x + (dirX / dist) * step, mapPosition.y + (dirY / dist) * step);
 
     spatialCell = sf::Vector2i(std::floor(static_cast<int>(mapPosition.x) / spacialCellSize), std::floor(static_cast<int>(mapPosition.y) / spacialCellSize));
 
-    std::cout << spatialCell.x << ", " << spatialCell.y << std::endl;
-
-    mapPosition = sf::Vector2f(mapPosition.x + (dirX / dist) * step, mapPosition.y + (dirY / dist) * step);
     objOnScreen.setPosition(mapPosition);
+
 }
 
 void Enemy::draw(sf::RenderWindow& window) {
     window.draw(objOnScreen);
+}
+
+sf::FloatRect Enemy::getBounds() const {
+    return objOnScreen.getGlobalBounds();
 }
