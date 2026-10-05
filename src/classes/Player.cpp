@@ -5,6 +5,7 @@
 #include "Player.h"
 
 #include <algorithm>
+#include <cmath>
 
 #include "Weapon.h"
 
@@ -53,6 +54,8 @@ void Player::update(const float dt, const sf::RenderWindow &window) {
     } else {
         playerState = Stationary;
     }
+
+    spatialCell = sf::Vector2i(std::floor(static_cast<int>(mapPosition.x) / spacialCellSize), std::floor(static_cast<int>(mapPosition.y) / spacialCellSize));
 
     // Clamp Player to Map
 

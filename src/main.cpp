@@ -5,11 +5,9 @@
 #include <algorithm>
 
 #include "classes/Player.h"
-#include "classes/Bullet.h"
+#include "classes/Enemy.h"
 #include "classes/GameHandler.h"
-#include "classes/Weapon.h"
 #include "classes/ProjectileManager.h"
-#include "classes/enums.h"
 
 sf::Font font("assets/fonts/LiberationSans-Regular.ttf");
 
@@ -284,6 +282,9 @@ int main() {
 
     Player player {sf::Vector2f(1500, 1500)};
     GameHandler gameHandler(player, window, mapSprite);
+
+    Enemy testEnemy {sf::Vector2f(1000, 1500), player};
+    gameHandler.createEnemy(testEnemy);
 
     const auto onClose = [&window](const sf::Event::Closed&)
     {

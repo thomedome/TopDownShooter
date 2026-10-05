@@ -14,10 +14,12 @@ public:
     [[nodiscard]] int getHealth() const;
     std::string getName();
     [[nodiscard]] bool isAlive() const;
+    sf::Vector2i getSpatialCell() const;
 
 protected:
     float moveSpeed {250.f};
     sf::Vector2f mapPosition {};
+    sf::Vector2i spatialCell{};
     int health {};
     int maxHealth {};
     std::string name {};

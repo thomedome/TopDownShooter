@@ -6,6 +6,9 @@
 #define TOPDOWNSHOOTER_COMMON_H
 #include "SFML/System/Vector2.hpp"
 
+// 1D - theyre squares though so both applicable
+constexpr int spacialCellSize = 100;
+
 struct BulletData {
     sf::Vector2f posToSpawn;
     sf::Vector2f destination;

@@ -15,3 +15,7 @@ std::string Entity::getName() {
 bool Entity::isAlive() const {
     return health > 0;
 }
+
+sf::Vector2i Entity::getSpatialCell() const {
+    return spatialCell;
+}
