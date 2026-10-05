@@ -7,8 +7,7 @@
 
 #include <cmath>
 #include "common.h"
-#include "Player.h"
-
+#include "SFML/Graphics.hpp"
 
 class Bullet {
 

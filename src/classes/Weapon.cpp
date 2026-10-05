@@ -5,6 +5,7 @@
 #include "Weapon.h"
 #include "Bullet.h"
 #include "common.h"
+#include "Player.h"
 #include "SFML/Graphics/Color.hpp"
 
 Weapon::Weapon(Player& owner) : Parent(owner) {
@@ -19,4 +20,20 @@ void Weapon::draw(sf::RenderWindow& window) const {
 Bullet Weapon::createBullet() const {
     const BulletData bulletData {Parent.getPosition(), Parent.getMousePosition(), Range, damage, projectileVelocity};
     return Bullet {bulletData};
+}
+
+void Weapon::update(const sf::Vector2f mousePosition) {
+    lookAtMouse(mousePosition);
+    objectOnScreen.setPosition(Parent.getPosition());
+}
+
+void Weapon::lookAtMouse(const sf::Vector2f mousePosition) {
+    const float dx = mousePosition.x - objectOnScreen.getPosition().x;
+    const float dy = mousePosition.y - objectOnScreen.getPosition().y;
+
+    const float rotationRadians = std::atan2(dy, dx);
+
+    const sf::Angle angleRot = sf::radians(rotationRadians);
+
+    objectOnScreen.setRotation(angleRot);
 }

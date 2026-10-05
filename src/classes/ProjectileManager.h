@@ -7,8 +7,10 @@
 
 #include "Bullet.h"
 #include "common.h"
-#include "GameHandler.h"
 #include <vector>
+
+class GameHandler;
+class Weapon;
 
 class ProjectileManager {
     std::vector<Bullet> AllBullets;

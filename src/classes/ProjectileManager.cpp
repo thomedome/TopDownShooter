@@ -3,7 +3,10 @@
 //
 
 #include "ProjectileManager.h"
+#include "GameHandler.h"
 #include "Bullet.h"
+
+ProjectileManager::ProjectileManager(GameHandler& gh) : ghRef(gh) {}
 
 void ProjectileManager::addBullet(Weapon& weapon) {
     const Bullet newBullet = weapon.createBullet();
