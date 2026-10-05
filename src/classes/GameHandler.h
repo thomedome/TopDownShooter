@@ -15,12 +15,13 @@ public:
     Player& player;
     // Enemies go here eventually...
 
-    ProjectileManager& projectileManager{};
+    ProjectileManager projectileManager{*this};
     sf::RenderWindow& window;
+    sf::Sprite mapSprite;
     bool showFPS {};
     void tick(float dt);
 
-    GameHandler(Player &playerRef, sf::RenderWindow& windowRef);
+    GameHandler(Player &playerRef, sf::RenderWindow& windowRef, sf::Sprite& mapSpriteRef);
 };
 
 

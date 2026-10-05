@@ -5,21 +5,24 @@
 #include "common.h"
 
 class Player;
+class Bullet;
 
 class Weapon {
+
+    Player& Parent;
+
 public:
     int damage {};
     int Range {500};
     float projectileVelocity {300.f};
 
-    Player& Parent;
     const std::string name {};
 
     sf::RectangleShape objectOnScreen{{25, 10}};
 
     explicit Weapon(Player& owner);
 
-    void fireBullet() const;
+    Bullet createBullet() const;
 
     void lookAtMouse(sf::Vector2f mousePosition);
 

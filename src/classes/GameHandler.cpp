@@ -1,4 +1,5 @@
 #include "GameHandler.h"
+#include "ProjectileManager.h"
 
 void GameHandler::tick(const float dt) {
     window.setView(player.getPlayerView());
@@ -9,4 +10,6 @@ void GameHandler::tick(const float dt) {
     player.draw(window); // Draw the player + gun
 }
 
-GameHandler::GameHandler(Player& playerRef, sf::RenderWindow& windowRef) : player(playerRef), window(windowRef){}
+GameHandler::GameHandler(Player& playerRef, sf::RenderWindow& windowRef, sf::Sprite& mapSpriteRef) : player(playerRef), window(windowRef), mapSprite(mapSpriteRef) {
+
+}

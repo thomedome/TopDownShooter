@@ -14,7 +14,7 @@ class ProjectileManager {
     std::vector<Bullet> AllBullets;
     GameHandler& ghRef;
 public:
-    void addBullet(const BulletData& bulletData);
+    void addBullet(Weapon& weapon);
     void updateProjectiles(const float dt, sf::RenderWindow& window);
 
     ProjectileManager(GameHandler& gh);

@@ -93,6 +93,10 @@ sf::Vector2f Player::getPosition() const {
     return mapPosition;
 }
 
-sf::View Player::getPlayerView() const {
+sf::View& Player::getPlayerView() {
     return playerView;
+}
+
+Weapon& Player::getWeapon() {
+    return heldWeapon;
 }

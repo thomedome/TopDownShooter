@@ -16,7 +16,7 @@ void Weapon::draw(sf::RenderWindow& window) const {
     window.draw(objectOnScreen);
 }
 
-void Weapon::fireBullet() const {
+Bullet Weapon::createBullet() const {
     const BulletData bulletData {Parent.getPosition(), Parent.getMousePosition(), Range, damage, projectileVelocity};
-    Bullet newBullet(bulletData);
+    return Bullet {bulletData};
 }

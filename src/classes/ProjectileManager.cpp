@@ -5,8 +5,8 @@
 #include "ProjectileManager.h"
 #include "Bullet.h"
 
-void ProjectileManager::addBullet(const BulletData& bulletData) {
-    const Bullet newBullet {bulletData};
+void ProjectileManager::addBullet(Weapon& weapon) {
+    const Bullet newBullet = weapon.createBullet();
     AllBullets.push_back(newBullet);
 }
 

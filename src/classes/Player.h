@@ -5,20 +5,18 @@
 #include "enums.h"
 #include "Weapon.h"
 
-class GameHandler;
-class Weapon;
-
 class Player : public Entity {
 public:
     PlayerState getPlayerState() const;
 
     Player(sf::Vector2f spawnPosition);
 
-    void update(const float dt, const sf::RenderWindow &window);
+    void update(float dt, const sf::RenderWindow &window);
     void draw(sf::RenderWindow& window);
     sf::Vector2f getMousePosition() const;
     sf::Vector2f getPosition() const;
-    sf::View getPlayerView() const;
+    sf::View& getPlayerView();
+    Weapon& getWeapon();
 
 private:
     sf::Vector2f mousePos;
