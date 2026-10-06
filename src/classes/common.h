@@ -17,6 +17,8 @@ constexpr float waveSpawnRadius = 750.f;
 
 constexpr int spacialCellSize = 100;
 
+constexpr float enemyDamageCD = .5f;
+
 struct BulletData {
     sf::Vector2f posToSpawn;
     sf::Vector2f destination;
