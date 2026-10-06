@@ -23,7 +23,7 @@ public:
     bool showFPS {};
     void tick(float dt);
     void updateEnemies(float dt);
-    void createEnemy(const Enemy& newEnemy);
+    void createEnemy(sf::Vector2f spawnPosition, Player& playerReference);
     std::vector<Enemy*> getEnemiesInSpatialCell(sf::Vector2i Cell);
 
     std::vector<Enemy*> spatialGridCells [mapWidth / spacialCellSize][mapHeight / spacialCellSize] {}; // 100 x 100 cell size. makes 30 cells for now.

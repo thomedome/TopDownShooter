@@ -19,8 +19,8 @@ void GameHandler::tick(const float dt) {
 
 GameHandler::GameHandler(Player& playerRef, sf::RenderWindow& windowRef, const sf::Sprite& mapSpriteRef) : player(playerRef), window(windowRef), mapSprite(mapSpriteRef) {}
 
-void GameHandler::createEnemy(const Enemy &newEnemy) {
-    allEnemies.push_back(std::make_unique<Enemy>(newEnemy));
+void GameHandler::createEnemy(sf::Vector2f spawnPosition, Player& playerReference) {
+    allEnemies.push_back(std::make_unique<Enemy>(spawnPosition, playerReference));
 }
 
 void GameHandler::updateEnemies(const float dt) {
@@ -30,6 +30,11 @@ void GameHandler::updateEnemies(const float dt) {
         for (int y = 0; y < mapHeight / spacialCellSize; ++y) {
             spatialGridCells[x][y].clear();
         }
+    }
+
+    for (const auto& enemy : allEnemies) {
+        enemy->update(dt);
+        enemy->draw(window);
     }
 
     allEnemies.erase(
@@ -46,52 +51,41 @@ void GameHandler::updateEnemies(const float dt) {
 
     for (auto& enemy : allEnemies) {
 
-        enemy->update(dt);
-        enemy->draw(window);
-
         const sf::Vector2i Cell {enemy->getSpatialCell()};
         spatialGridCells[Cell.x][Cell.y].push_back(enemy.get());
 
         std::vector<Enemy*> inCell = getEnemiesInSpatialCell(Cell);
 
-        for (auto& enemy2 : inCell) {
+        sf::Vector2f separation {0, 0};
+        sf::Vector2f delta {};
+
+        for (const auto& enemy2 : inCell) {
 
             if (enemy2 == enemy.get()) {
                 continue;
             }
 
-            auto intersection = enemy->getBounds().findIntersection(enemy2->getBounds());
+            // Enemy on Enemy Collision
 
-            if (intersection) {
-                const float overlapX = intersection->size.x;
-                float const overlapY = intersection->size.y;
+            delta = enemy->getPosition() - enemy2->getPosition();
 
-                const float dx = enemy->getPosition().x - enemy2->getPosition().x;
+            float distance = delta.length();
+            float sepRadius = enemy->objOnScreen.getSize().x + 10;
 
-                if (overlapX < overlapY) {
-                    const float push = overlapX / 2.f;
-
-                    if (dx >= 0.f) {
-                        enemy->setPosition(sf::Vector2f(enemy->getPosition().x + push, enemy->getPosition().y));
-                        enemy2->setPosition(sf::Vector2f(enemy2->getPosition().x - push, enemy2->getPosition().y));
-                    } else {
-                        enemy->setPosition(sf::Vector2f(enemy->getPosition().x - push, enemy->getPosition().y));
-                        enemy2->setPosition(sf::Vector2f(enemy2->getPosition().x + push, enemy2->getPosition().y));
-                    }
-
-                } else {
-                    const float push = overlapY / 2.f;
-
-                    if (dx >= 0.f) {
-                        enemy->setPosition(sf::Vector2f(enemy->getPosition().x, enemy->getPosition().y + push));
-                        enemy2->setPosition(sf::Vector2f(enemy2->getPosition().x, enemy2->getPosition().y - push));
-                    } else {
-                        enemy->setPosition(sf::Vector2f(enemy->getPosition().x, enemy->getPosition().y - push));
-                        enemy2->setPosition(sf::Vector2f(enemy2->getPosition().x, enemy2->getPosition().y + push));
-                    }
-                }
+            if (distance > 0.f && distance < sepRadius) {
+                separation += delta.normalized();
             }
+
+            if (separation != sf::Vector2f{0.f, 0.f}) {
+                separation = separation.normalized();
+
+                enemy -> setPosition(enemy->getPosition() + separation * 2.5f);
+            }
+
+
         }
+
+        enemy->move(delta, separation * 2.5f, dt);
     }
 
     for (auto& bullet : projectileManager.getBullets()) {

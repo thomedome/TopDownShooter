@@ -13,6 +13,21 @@ Enemy::Enemy(const sf::Vector2f spawnPosition, Player& Target) : Target(Target) 
     moveSpeed = {200.f};
     objOnScreen.setFillColor(sf::Color::Red);
     objOnScreen.setOutlineColor(sf::Color::White);
+    objOnScreen.setOutlineThickness(2.0f);
+}
+
+void Enemy::move(sf::Vector2f direction, const sf::Vector2f separationVector, const float dt) {
+
+    direction += separationVector;
+
+    if (direction != sf::Vector2f(0.f, 0.f)) {
+        direction = direction.normalized();
+    }
+
+    mapPosition += direction * moveSpeed * dt;
+
+    spatialCell = sf::Vector2i(std::floor(static_cast<int>(mapPosition.x) / spacialCellSize), std::floor(static_cast<int>(mapPosition.y) / spacialCellSize));
+    objOnScreen.setPosition(mapPosition);
 }
 
 void Enemy::update(const float dt) {
@@ -31,11 +46,6 @@ void Enemy::update(const float dt) {
         return;
     }
     mapPosition = sf::Vector2f(mapPosition.x + (dirX / dist) * step, mapPosition.y + (dirY / dist) * step);
-
-    spatialCell = sf::Vector2i(std::floor(static_cast<int>(mapPosition.x) / spacialCellSize), std::floor(static_cast<int>(mapPosition.y) / spacialCellSize));
-
-    objOnScreen.setPosition(mapPosition);
-
 }
 
 void Enemy::draw(sf::RenderWindow& window) {

@@ -11,6 +11,10 @@
 constexpr int mapHeight = 3000;
 constexpr int mapWidth = 3000;
 
+constexpr float PI = 3.14159265358979323846f;
+
+constexpr float waveSpawnRadius = 750.f;
+
 constexpr int spacialCellSize = 100;
 
 struct BulletData {

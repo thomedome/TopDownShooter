@@ -18,6 +18,7 @@ class Enemy : public Entity {
         void update(const float dt);
         void draw(sf::RenderWindow& window);
         sf::FloatRect getBounds() const;
+        void move(const sf::Vector2f direction, const sf::Vector2f separationVector, const float dt);
 
     private:
 };
