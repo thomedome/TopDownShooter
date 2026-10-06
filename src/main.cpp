@@ -35,7 +35,6 @@ int main() {
     Player player {sf::Vector2f(1500, 1500)};
     GameHandler gameHandler(player, window, mapSprite);
 
-
     const auto onClose = [&window](const sf::Event::Closed&)
     {
         window.close();
@@ -76,8 +75,6 @@ int main() {
         }
 
         window.handleEvents(onClose, onKeyPressed, onMousePressed); // One Off Keycodes
-
-        std::cout << gameHandler.allEnemies.empty() << std::endl;
 
         if (gameHandler.allEnemies.empty()) {
             wave += 1;

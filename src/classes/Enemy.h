@@ -21,6 +21,7 @@ class Enemy : public Entity {
         void move(const sf::Vector2f direction, const sf::Vector2f separationVector, const float dt);
 
     private:
+        sf::Vector2f targetDirection;
 };
 
 

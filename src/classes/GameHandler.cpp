@@ -32,11 +32,6 @@ void GameHandler::updateEnemies(const float dt) {
         }
     }
 
-    for (const auto& enemy : allEnemies) {
-        enemy->update(dt);
-        enemy->draw(window);
-    }
-
     allEnemies.erase(
        std::remove_if(
            allEnemies.begin(),
@@ -48,49 +43,64 @@ void GameHandler::updateEnemies(const float dt) {
        allEnemies.end()
        );
 
-
-    for (auto& enemy : allEnemies) {
+    for (const auto& enemy : allEnemies) {
+        enemy->update(dt);
 
         const sf::Vector2i Cell {enemy->getSpatialCell()};
+
+        Cell.x = std::clamp(Cell.x, 0, mapWidth / spacialCellSize - 1);
+        Cell.y = std::clamp(Cell.y, 0, mapHeight / spacialCellSize - 1);
+
+        std::cout
+    << "Cell: "
+    << Cell.x << ", "
+    << Cell.y
+    << std::endl;
+
         spatialGridCells[Cell.x][Cell.y].push_back(enemy.get());
+    }
 
-        std::vector<Enemy*> inCell = getEnemiesInSpatialCell(Cell);
+    for (auto& enemy : allEnemies) {
+        const sf::Vector2i Cell {enemy->getSpatialCell()};
 
-        sf::Vector2f separation {0, 0};
-        sf::Vector2f delta {};
+        std::vector<Enemy*> inCell = getEnemiesInRelativeCell(Cell);
+
+        sf::Vector2f separation {0.f, 0.f};
 
         for (const auto& enemy2 : inCell) {
-
             if (enemy2 == enemy.get()) {
                 continue;
             }
 
-            // Enemy on Enemy Collision
-
-            delta = enemy->getPosition() - enemy2->getPosition();
-
+            sf::Vector2f delta = enemy->getPosition() - enemy2->getPosition();
             float distance = delta.length();
-            float sepRadius = enemy->objOnScreen.getSize().x + 10;
+            float sepRadius = enemy->objOnScreen.getSize().x + 10.f;
 
             if (distance > 0.f && distance < sepRadius) {
-                separation += delta.normalized();
+                float force = (sepRadius - distance) / sepRadius;
+
+                if (distance > 0.001f) {
+                    separation += (delta / distance) * force;
+                }
             }
-
-            if (separation != sf::Vector2f{0.f, 0.f}) {
-                separation = separation.normalized();
-
-                enemy -> setPosition(enemy->getPosition() + separation * 2.5f);
-            }
-
-
         }
 
-        enemy->move(delta, separation * 2.5f, dt);
+        sf::Vector2f targetPos = enemy->Target.getPosition();
+        sf::Vector2f targetDelta = targetPos - enemy->getPosition();
+        sf::Vector2f targetDir{0.f, 0.f};
+
+        if (targetDelta.length() > 2.f) {
+            targetDir = targetDelta.normalized();
+        }
+
+        enemy->move(targetDir, separation, dt);
+
+        enemy->draw(window);
     }
 
     for (auto& bullet : projectileManager.getBullets()) {
         const sf::Vector2i testingCell = bullet.getSpatialCell();
-        std::vector<Enemy*> enemiesInCell = getEnemiesInSpatialCell(testingCell);
+        std::vector<Enemy*> enemiesInCell = getEnemiesInRelativeCell(testingCell);
 
         for (auto enemy : enemiesInCell) {
             if (bullet.getBounds().findIntersection(enemy->getBounds())) {
@@ -106,4 +116,31 @@ void GameHandler::updateEnemies(const float dt) {
 
 std::vector<Enemy*> GameHandler::getEnemiesInSpatialCell(const sf::Vector2i Cell) {
     return spatialGridCells[Cell.x][Cell.y];
+}
+
+std::vector<Enemy*> GameHandler::getEnemiesInRelativeCell(const sf::Vector2i Cell) {
+    std::vector<Enemy*> returning{};
+
+    const int gridWidth = mapWidth / spacialCellSize;
+    const int gridHeight = mapHeight / spacialCellSize;
+
+    for (int xOffset = -1; xOffset <= 1; ++xOffset) {
+        for (int yOffset = -1; yOffset <= 1; ++yOffset) {
+
+            const int x = Cell.x + xOffset;
+            const int y = Cell.y + yOffset;
+
+            // Skip cells outside the map
+            if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) { continue; }
+
+            const auto& cell = spatialGridCells[x][y];
+
+            returning.insert(
+                returning.end(),
+                cell.begin(),
+                cell.end()
+            );
+        }
+    }
+    return returning;
 }
