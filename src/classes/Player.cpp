@@ -81,6 +81,15 @@ void Player::update(const float dt, const sf::RenderWindow &window) {
     playerView.setCenter(camView); // Set View to Player Pos
 
     heldWeapon.update(mousePos);
+
+    if (invinciblityTimer > 0.f) {
+        invincible = true;
+        invinciblityTimer -= dt;
+    } else {
+        invincible = false;
+        invinciblityTimer = 0.f;
+    }
+
 }
 
 void Player::draw(sf::RenderWindow& window) {
@@ -102,4 +111,14 @@ sf::View& Player::getPlayerView() {
 
 Weapon& Player::getWeapon() {
     return heldWeapon;
+}
+
+void Player::takeDamage(int damage) {
+    if (isAlive()) {
+        if (!isInvincible()) {
+            health -= damage;
+
+            invinciblityTimer = attackInvincibilityTimer;
+        }
+    }
 }

@@ -13,6 +13,12 @@ constexpr int mapWidth = 3000;
 
 constexpr float PI = 3.14159265358979323846f;
 
+constexpr float aspectRatio = 16.f / 9.f;
+
+constexpr int windowHeight = 1080;
+
+constexpr float attackInvincibilityTimer = 1.0f;
+
 constexpr float waveSpawnRadius = 750.f;
 
 constexpr int spacialCellSize = 100;

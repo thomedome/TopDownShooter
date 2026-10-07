@@ -90,3 +90,14 @@ void Enemy::draw(sf::RenderWindow& window) {
 sf::FloatRect Enemy::getBounds() const {
     return objOnScreen.getGlobalBounds();
 }
+
+float Enemy::getAttackTimer() {
+    return attackTimer;
+}
+
+
+void Enemy::attack(Entity& Target) {
+    if (!getAttackTimer() > 0.0f) {
+
+    }
+}

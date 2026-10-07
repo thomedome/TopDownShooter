@@ -17,9 +17,12 @@ public:
     [[nodiscard]] sf::Vector2i getSpatialCell() const;
     [[nodiscard]] sf::Vector2f getPosition() const;
     void setPosition(const sf::Vector2f& position);
-    void takeDamage(int damage);
+    virtual void takeDamage(int damage);
+    bool isInvincible();
 
 protected:
+    float invinciblityTimer {0.0f};
+    bool invincible {false};
     float moveSpeed {250.f};
     sf::Vector2f mapPosition {};
     sf::Vector2i spatialCell{};

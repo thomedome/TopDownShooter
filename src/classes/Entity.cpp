@@ -22,7 +22,9 @@ sf::Vector2i Entity::getSpatialCell() const {
 
 void Entity::takeDamage(int damage) {
     if (isAlive()) {
-        health -= damage;
+        if (!isInvincible()) {
+            health -= damage;
+        }
     }
 }
 
@@ -32,4 +34,8 @@ sf::Vector2f Entity::getPosition() const {
 
 void Entity::setPosition(const sf::Vector2f& position) {
     mapPosition = position;
+}
+
+bool Entity::isInvincible() {
+    return invincible;
 }

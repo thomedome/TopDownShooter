@@ -46,16 +46,10 @@ void GameHandler::updateEnemies(const float dt) {
     for (const auto& enemy : allEnemies) {
         enemy->update(dt);
 
-        const sf::Vector2i Cell {enemy->getSpatialCell()};
+        sf::Vector2i Cell {enemy->getSpatialCell()};
 
         Cell.x = std::clamp(Cell.x, 0, mapWidth / spacialCellSize - 1);
         Cell.y = std::clamp(Cell.y, 0, mapHeight / spacialCellSize - 1);
-
-        std::cout
-    << "Cell: "
-    << Cell.x << ", "
-    << Cell.y
-    << std::endl;
 
         spatialGridCells[Cell.x][Cell.y].push_back(enemy.get());
     }
@@ -74,7 +68,7 @@ void GameHandler::updateEnemies(const float dt) {
 
             sf::Vector2f delta = enemy->getPosition() - enemy2->getPosition();
             float distance = delta.length();
-            float sepRadius = enemy->objOnScreen.getSize().x + 10.f;
+            float sepRadius = enemy->objOnScreen.getSize().x + 40.f;
 
             if (distance > 0.f && distance < sepRadius) {
                 float force = (sepRadius - distance) / sepRadius;
@@ -135,11 +129,7 @@ std::vector<Enemy*> GameHandler::getEnemiesInRelativeCell(const sf::Vector2i Cel
 
             const auto& cell = spatialGridCells[x][y];
 
-            returning.insert(
-                returning.end(),
-                cell.begin(),
-                cell.end()
-            );
+            returning.insert(returning.end(), cell.begin(), cell.end());
         }
     }
     return returning;

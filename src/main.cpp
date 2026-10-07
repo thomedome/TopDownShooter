@@ -2,10 +2,9 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
-#include <numbers>
 
 #include "classes/Player.h"
-#include "classes/Enemy.h"
+#include "classes/common.h"
 #include "classes/GameHandler.h"
 #include "classes/ProjectileManager.h"
 
@@ -17,7 +16,7 @@ float floatClamp(const float d, const float min, const float max) { // Thank you
 }
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode({750, 750}), "Top Down Shooter");
+    sf::RenderWindow window(sf::VideoMode({static_cast<unsigned>(windowHeight * aspectRatio), windowHeight}), "Top Down Shooter", sf::State::Fullscreen);
 
     const sf::Texture mapTexture {"assets/testMap.jpg"};
     sf::Sprite mapSprite(mapTexture);
@@ -38,14 +37,12 @@ int main() {
     const auto onClose = [&window](const sf::Event::Closed&)
     {
         window.close();
-        exit(0);
     };
 
     const auto onKeyPressed = [&window, &gameHandler](const sf::Event::KeyPressed& keyPressed)
     {
         if (keyPressed.scancode == sf::Keyboard::Scancode::Escape) {
             window.close();
-            exit(0);
         }
 
         if (keyPressed.scancode == sf::Keyboard::Scancode::F) {
