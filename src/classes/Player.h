@@ -13,7 +13,7 @@ public:
     explicit Player(sf::Vector2f spawnPosition);
 
     void update(float dt, const sf::RenderWindow &window);
-    void draw(sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window) const;
     sf::Vector2f getMousePosition() const;
     sf::Vector2f getPosition() const;
     sf::View& getPlayerView();

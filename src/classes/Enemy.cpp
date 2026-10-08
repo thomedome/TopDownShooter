@@ -59,6 +59,10 @@ void Enemy::update(const float dt) {
     }
 
     this->targetDirection = sf::Vector2f(dirX / dist, dirY / dist);
+
+    if (dist < attackRange) {
+        attack();
+    }
 }
 
 void Enemy::move(sf::Vector2f targetDir, const sf::Vector2f separationVector, const float dt) {
@@ -83,7 +87,7 @@ void Enemy::move(sf::Vector2f targetDir, const sf::Vector2f separationVector, co
     objOnScreen.setPosition(mapPosition);
 }
 
-void Enemy::draw(sf::RenderWindow& window) {
+void Enemy::draw(sf::RenderWindow& window) const {
     window.draw(objOnScreen);
 }
 
@@ -91,13 +95,10 @@ sf::FloatRect Enemy::getBounds() const {
     return objOnScreen.getGlobalBounds();
 }
 
-float Enemy::getAttackTimer() {
+float Enemy::getAttackTimer() const {
     return attackTimer;
 }
 
-
-void Enemy::attack(Entity& Target) {
-    if (!getAttackTimer() > 0.0f) {
-
-    }
+void Enemy::attack() const {
+    if (getAttackTimer() <= 0.0f) {Target.takeDamage(damage);}
 }

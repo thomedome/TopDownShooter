@@ -14,9 +14,9 @@ float floatClamp(const float d, const float min, const float max) { // Thank you
     const float t = d < min ? min : d;
     return t > max ? max : t;
 }
-
+// , sf::State::Fullscreen
 int main() {
-    sf::RenderWindow window(sf::VideoMode({static_cast<unsigned>(windowHeight * aspectRatio), windowHeight}), "Top Down Shooter", sf::State::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode({static_cast<unsigned>(windowHeight * aspectRatio), windowHeight}), "Top Down Shooter");
 
     const sf::Texture mapTexture {"assets/testMap.jpg"};
     sf::Sprite mapSprite(mapTexture);

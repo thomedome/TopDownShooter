@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 
 #include "Weapon.h"
 
@@ -20,6 +21,10 @@ PlayerState Player::getPlayerState() const {
 }
 
 void Player::update(const float dt, const sf::RenderWindow &window) {
+
+    if (!isAlive()) {
+        return;
+    }
 
     // Handling Events
 
@@ -85,6 +90,7 @@ void Player::update(const float dt, const sf::RenderWindow &window) {
     if (invinciblityTimer > 0.f) {
         invincible = true;
         invinciblityTimer -= dt;
+        std::cout << invinciblityTimer << std::endl;
     } else {
         invincible = false;
         invinciblityTimer = 0.f;
@@ -92,7 +98,7 @@ void Player::update(const float dt, const sf::RenderWindow &window) {
 
 }
 
-void Player::draw(sf::RenderWindow& window) {
+void Player::draw(sf::RenderWindow& window) const {
     window.draw(objOnScreen);
     heldWeapon.draw(window);
 }
