@@ -52,7 +52,9 @@ int main() {
 
     const auto onMousePressed = [&](const sf::Event::MouseButtonPressed& mouseButtonPressed) {
         if (mouseButtonPressed.button == sf::Mouse::Button::Left) {
-            gameHandler.projectileManager.addBullet(player.getWeapon());
+            if (player.isAlive()) {
+                gameHandler.projectileManager.addBullet(player.getWeapon());
+            }
         }
     };
 

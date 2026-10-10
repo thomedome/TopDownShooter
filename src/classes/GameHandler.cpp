@@ -98,7 +98,6 @@ void GameHandler::updateEnemies(const float dt) {
 
         for (auto enemy : enemiesInCell) {
             if (bullet.getBounds().findIntersection(enemy->getBounds())) {
-                std::cout << "Found!" << std::endl;
                 bullet.destroyFlag = true;
                 int dmg = bullet.getDamage();
 

@@ -90,7 +90,6 @@ void Player::update(const float dt, const sf::RenderWindow &window) {
     if (invinciblityTimer > 0.f) {
         invincible = true;
         invinciblityTimer -= dt;
-        std::cout << invinciblityTimer << std::endl;
     } else {
         invincible = false;
         invinciblityTimer = 0.f;
@@ -122,6 +121,7 @@ Weapon& Player::getWeapon() {
 void Player::takeDamage(int damage) {
     if (isAlive()) {
         if (!isInvincible()) {
+            std::cout << "Player Health: " << getHealth() << std::endl;
             health -= damage;
 
             invinciblityTimer = attackInvincibilityTimer;

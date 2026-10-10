@@ -60,7 +60,11 @@ void Enemy::update(const float dt) {
 
     this->targetDirection = sf::Vector2f(dirX / dist, dirY / dist);
 
-    if (dist < attackRange) {
+    if (getAttackTimer() > 0.0f) {
+        attackTimer -= dt;
+    }
+
+    if (dist < attackRange && getAttackTimer() <= 0.0f) {
         attack();
     }
 }
@@ -99,6 +103,10 @@ float Enemy::getAttackTimer() const {
     return attackTimer;
 }
 
-void Enemy::attack() const {
-    if (getAttackTimer() <= 0.0f) {Target.takeDamage(damage);}
+void Enemy::attack() {
+    if (getAttackTimer() <= 0.0f) {
+        Target.takeDamage(damage);
+        std::cout << "attacking!" << std::endl;
+        attackTimer = enemyDamageCD;
+    }
 }
