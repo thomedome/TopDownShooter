@@ -35,6 +35,8 @@ add_executable(TopDownShooter
         src/classes/ProjectileManager.h
         src/classes/Enemy.cpp
         src/classes/Enemy.h
+        src/classes/Button.cpp
+        src/classes/Button.h
 )
 
 add_custom_command(

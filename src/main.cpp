@@ -10,10 +10,6 @@
 
 sf::Font font("assets/fonts/LiberationSans-Regular.ttf");
 
-float floatClamp(const float d, const float min, const float max) { // Thank you random man on stack overflow!
-    const float t = d < min ? min : d;
-    return t > max ? max : t;
-}
 // , sf::State::Fullscreen
 int main() {
     sf::RenderWindow window(sf::VideoMode({static_cast<unsigned>(windowHeight * aspectRatio), windowHeight}), "Top Down Shooter");
@@ -63,11 +59,11 @@ int main() {
             }
         };
 
-        if (player.getRestartFlag()) {
-            continue;
-        }
-
         while (window.isOpen()) {
+
+            if (player.getRestartFlag()) {
+                break;
+            }
 
             const float dt = dtClock.restart().asSeconds();
 
@@ -124,6 +120,4 @@ int main() {
             window.display();
         }
     }
-
-    return 0;
 }

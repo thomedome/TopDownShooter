@@ -26,7 +26,7 @@ class Enemy : public Entity {
     private:
         sf::Vector2f targetDirection;
         float attackTimer {0.0f};
-        float attackRange {100.f};
+        float attackRange {75.f};
         int damage {25};
         int score {10};
 };

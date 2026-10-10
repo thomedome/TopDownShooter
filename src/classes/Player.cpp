@@ -37,6 +37,7 @@ void Player::update(const float dt, const sf::RenderWindow &window) {
 
             if (t >= 1.f) {
                 isDying = false;
+                restartFlag = true;
             }
 
             return;

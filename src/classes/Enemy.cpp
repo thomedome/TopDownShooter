@@ -10,7 +10,7 @@
 Enemy::Enemy(const sf::Vector2f spawnPosition, Player& Target) : Target(Target) {
     mapPosition = spawnPosition;
     objOnScreen.setOrigin(objOnScreen.getLocalBounds().getCenter());
-    moveSpeed = {200.f};
+    moveSpeed = {150.f};
     objOnScreen.setFillColor(sf::Color::Red);
     objOnScreen.setOutlineColor(sf::Color::White);
     objOnScreen.setOutlineThickness(2.0f);
