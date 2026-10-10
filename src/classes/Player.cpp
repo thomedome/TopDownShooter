@@ -163,3 +163,7 @@ void Player::addScore(int addingScore) {
 int Player::getScore() const {
     return score;
 }
+
+bool Player::getRestartFlag() const {
+    return restartFlag;
+}

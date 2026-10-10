@@ -17,107 +17,113 @@ float floatClamp(const float d, const float min, const float max) { // Thank you
 // , sf::State::Fullscreen
 int main() {
     sf::RenderWindow window(sf::VideoMode({static_cast<unsigned>(windowHeight * aspectRatio), windowHeight}), "Top Down Shooter");
-
-    const sf::Texture mapTexture {"assets/testMap.jpg"};
-    sf::Sprite mapSprite(mapTexture);
-
-    sf::Text FPSObj {font, "FPS: XX"};
-    float dtAccum {0.f}; // fps timer
-    float fpsTime {.5f};
-    float frameCount {0}; // float for the sake of narrowing conversion
-    int fps {};
-
-    sf::Text WaveObj{font, "Wave: 1"};
-    sf::Text ScoreOBj{font, "Score: 0"};
-
-    int wave = 0;
-
-    sf::Clock dtClock;
-
-    Player player {sf::Vector2f(1500, 1500)};
-    GameHandler gameHandler(player, window, mapSprite);
-
-    const auto onClose = [&window](const sf::Event::Closed&)
-    {
-        window.close();
-    };
-
-    const auto onKeyPressed = [&window, &gameHandler](const sf::Event::KeyPressed& keyPressed)
-    {
-        if (keyPressed.scancode == sf::Keyboard::Scancode::Escape) {
-            window.close();
-        }
-
-        if (keyPressed.scancode == sf::Keyboard::Scancode::F) {
-            gameHandler.showFPS = !gameHandler.showFPS;
-        }
-    };
-
-    const auto onMousePressed = [&](const sf::Event::MouseButtonPressed& mouseButtonPressed) {
-        if (mouseButtonPressed.button == sf::Mouse::Button::Left) {
-            if (player.isAlive()) {
-                gameHandler.projectileManager.addBullet(player.getWeapon());
-            }
-        }
-    };
-
     window.setVerticalSyncEnabled(true); // VSync
 
-    while (window.isOpen()) {
+    while (true) {
+        const sf::Texture mapTexture {"assets/testMap.jpg"};
+        sf::Sprite mapSprite(mapTexture);
 
-        const float dt = dtClock.restart().asSeconds();
+        sf::Text FPSObj {font, "FPS: XX"};
+        float dtAccum {0.f}; // fps timer
+        float fpsTime {.5f};
+        float frameCount {0}; // float for the sake of narrowing conversion
+        int fps {};
 
-        frameCount += 1;
-        dtAccum += dt;
+        sf::Text WaveObj{font, "Wave: 1"};
+        sf::Text ScoreOBj{font, "Score: 0"};
 
-        if (dtAccum >= fpsTime) {
-            fps = static_cast<int>(std::round(frameCount / fpsTime));
-            frameCount = 1;
-            dtAccum -= fpsTime;
-        }
+        int wave = 0;
 
-        window.handleEvents(onClose, onKeyPressed, onMousePressed); // One Off Keycodes
+        sf::Clock dtClock;
 
-        if (gameHandler.allEnemies.empty()) {
-            wave += 1;
+        Player player {sf::Vector2f(1500, 1500)};
+        GameHandler gameHandler(player, window, mapSprite);
 
-            sf::Vector2f playerPos {player.getPosition()};
+        const auto onClose = [&window](const sf::Event::Closed&)
+        {
+            window.close();
+        };
 
-            const auto enemyCount = static_cast<float>(wave * 3);
-
-            for (int i = 0; i < enemyCount; ++i) {
-                auto angle = 2.f * PI * i / enemyCount;
-                sf::Vector2f spawnPosition {playerPos.x + std::cos(angle) * waveSpawnRadius, playerPos.y + std::sin(angle) * waveSpawnRadius};
-
-                gameHandler.createEnemy(spawnPosition, player);
+        const auto onKeyPressed = [&window, &gameHandler](const sf::Event::KeyPressed& keyPressed)
+        {
+            if (keyPressed.scancode == sf::Keyboard::Scancode::Escape) {
+                window.close();
             }
+
+            if (keyPressed.scancode == sf::Keyboard::Scancode::F) {
+                gameHandler.showFPS = !gameHandler.showFPS;
+            }
+        };
+
+        const auto onMousePressed = [&](const sf::Event::MouseButtonPressed& mouseButtonPressed) {
+            if (mouseButtonPressed.button == sf::Mouse::Button::Left) {
+                if (player.isAlive()) {
+                    gameHandler.projectileManager.addBullet(player.getWeapon());
+                }
+            }
+        };
+
+        if (player.getRestartFlag()) {
+            continue;
         }
 
-        gameHandler.tick(dt);
+        while (window.isOpen()) {
 
-        if (gameHandler.showFPS) {
+            const float dt = dtClock.restart().asSeconds();
+
+            frameCount += 1;
+            dtAccum += dt;
+
+            if (dtAccum >= fpsTime) {
+                fps = static_cast<int>(std::round(frameCount / fpsTime));
+                frameCount = 1;
+                dtAccum -= fpsTime;
+            }
+
+            window.handleEvents(onClose, onKeyPressed, onMousePressed); // One Off Keycodes
+
+            if (gameHandler.allEnemies.empty()) {
+                wave += 1;
+
+                sf::Vector2f playerPos {player.getPosition()};
+
+                const auto enemyCount = static_cast<float>(wave * 3);
+
+                for (int i = 0; i < enemyCount; ++i) {
+                    auto angle = 2.f * PI * i / enemyCount;
+                    sf::Vector2f spawnPosition {playerPos.x + std::cos(angle) * waveSpawnRadius, playerPos.y + std::sin(angle) * waveSpawnRadius};
+
+                    gameHandler.createEnemy(spawnPosition, player);
+                }
+            }
+
+            gameHandler.tick(dt);
+
+            if (gameHandler.showFPS) {
+                window.setView(window.getDefaultView());
+
+                FPSObj.setString("FPS: " + std::to_string(static_cast<int>(std::round(fps))));
+                FPSObj.setPosition({(windowHeight * aspectRatio) - 300, 10.f});
+
+                window.draw(FPSObj);
+            }
+
             window.setView(window.getDefaultView());
 
-            FPSObj.setString("FPS: " + std::to_string(static_cast<int>(std::round(fps))));
-            FPSObj.setPosition({(windowHeight * aspectRatio) - 300, 10.f});
+            WaveObj.setString("Wave: " + std::to_string(static_cast<int>(wave)));
+            WaveObj.setPosition({10.f, 10.f});
 
-            window.draw(FPSObj);
+            ScoreOBj.setString("Score: " + std::to_string(player.getScore()));
+            ScoreOBj.setPosition({10.f, 50.f});
+
+            window.draw(WaveObj);
+            window.draw(ScoreOBj);
+
+            window.setView(player.getPlayerView());
+
+            window.display();
         }
-
-        window.setView(window.getDefaultView());
-
-        WaveObj.setString("Wave: " + std::to_string(static_cast<int>(wave)));
-        WaveObj.setPosition({10.f, 10.f});
-
-        ScoreOBj.setString("Score: " + std::to_string(player.getScore()));
-        ScoreOBj.setPosition({10.f, 50.f});
-
-        window.draw(WaveObj);
-        window.draw(ScoreOBj);
-
-        window.setView(player.getPlayerView());
-
-        window.display();
     }
+
     return 0;
 }
