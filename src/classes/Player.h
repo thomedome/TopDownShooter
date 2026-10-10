@@ -20,6 +20,8 @@ public:
     Weapon& getWeapon();
     void Death();
     void takeDamage(int damage) override;
+    void addScore(int addingScore);
+    int getScore() const;
 
 private:
     sf::Vector2f mousePos;
@@ -30,6 +32,7 @@ private:
     bool isDying {false};
     float deathTweenTime {0.0f};
     float deathTweenDuration {2.5f};
+    int score{0};
 
     sf::Vector2f deathCamStartSize = getPlayerView().getSize();
     sf::Vector2f deathCamEndSize {deathCamStartSize.x + (300.f * aspectRatio), deathCamStartSize.y + 300.f};

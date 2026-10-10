@@ -27,10 +27,13 @@ int main() {
     float frameCount {0}; // float for the sake of narrowing conversion
     int fps {};
 
-    int wave = 1;
+    sf::Text WaveObj{font, "Wave: 1"};
+    sf::Text ScoreOBj{font, "Score: 0"};
+
+    int wave = 0;
 
     sf::Clock dtClock;
-    
+
     Player player {sf::Vector2f(1500, 1500)};
     GameHandler gameHandler(player, window, mapSprite);
 
@@ -96,10 +99,23 @@ int main() {
             window.setView(window.getDefaultView());
 
             FPSObj.setString("FPS: " + std::to_string(static_cast<int>(std::round(fps))));
-            FPSObj.setPosition({10.f, 10.f});
+            FPSObj.setPosition({(windowHeight * aspectRatio) - 300, 10.f});
 
             window.draw(FPSObj);
         }
+
+        window.setView(window.getDefaultView());
+
+        WaveObj.setString("Wave: " + std::to_string(static_cast<int>(wave)));
+        WaveObj.setPosition({10.f, 10.f});
+
+        ScoreOBj.setString("Score: " + std::to_string(player.getScore()));
+        ScoreOBj.setPosition({10.f, 50.f});
+
+        window.draw(WaveObj);
+        window.draw(ScoreOBj);
+
+        window.setView(player.getPlayerView());
 
         window.display();
     }

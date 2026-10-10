@@ -109,3 +109,7 @@ void Enemy::attack() {
         attackTimer = enemyDamageCD;
     }
 }
+
+int Enemy::getScore() const {
+    return score;
+}

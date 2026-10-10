@@ -155,3 +155,11 @@ void Player::takeDamage(int damage) {
         }
     }
 }
+
+void Player::addScore(int addingScore) {
+    score += addingScore;
+}
+
+int Player::getScore() const {
+    return score;
+}

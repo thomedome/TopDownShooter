@@ -21,12 +21,14 @@ class Enemy : public Entity {
         void move(const sf::Vector2f direction, const sf::Vector2f separationVector, const float dt);
         void attack(); // Just a float-y idea, some enemy classes / some debuff would attack others. So keep entity class instead of just player.
         float getAttackTimer() const;
+        int getScore() const;
         // int getDamage();
     private:
         sf::Vector2f targetDirection;
         float attackTimer {0.0f};
         float attackRange {100.f};
         int damage {25};
+        int score {10};
 };
 
 
