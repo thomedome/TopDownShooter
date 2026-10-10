@@ -30,7 +30,7 @@ int main() {
     int wave = 1;
 
     sf::Clock dtClock;
-
+    
     Player player {sf::Vector2f(1500, 1500)};
     GameHandler gameHandler(player, window, mapSprite);
 

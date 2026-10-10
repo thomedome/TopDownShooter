@@ -25,6 +25,10 @@ constexpr int spacialCellSize = 100;
 
 constexpr float enemyDamageCD = .5f;
 
+inline float lerp(float a, float b, float t) {
+    return a + t * (b - a);
+}
+
 struct BulletData {
     sf::Vector2f posToSpawn;
     sf::Vector2f destination;

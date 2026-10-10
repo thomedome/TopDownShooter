@@ -106,7 +106,6 @@ float Enemy::getAttackTimer() const {
 void Enemy::attack() {
     if (getAttackTimer() <= 0.0f) {
         Target.takeDamage(damage);
-        std::cout << "attacking!" << std::endl;
         attackTimer = enemyDamageCD;
     }
 }

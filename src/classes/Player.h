@@ -18,6 +18,7 @@ public:
     sf::Vector2f getPosition() const;
     sf::View& getPlayerView();
     Weapon& getWeapon();
+    void Death();
     void takeDamage(int damage) override;
 
 private:
@@ -26,6 +27,12 @@ private:
     PlayerState playerState {Stationary};
     sf::View playerView{mapPosition, {windowHeight * aspectRatio, windowHeight}};
     sf::RectangleShape objOnScreen {sf::Vector2f(50, 50)};
+    bool isDying {false};
+    float deathTweenTime {0.0f};
+    float deathTweenDuration {2.5f};
+
+    sf::Vector2f deathCamStartSize = getPlayerView().getSize();
+    sf::Vector2f deathCamEndSize {deathCamStartSize.x + (300.f * aspectRatio), deathCamStartSize.y + 300.f};
 };
 
 #endif //TOPDOWNSHOOTER_PLAYER_H
