@@ -19,8 +19,8 @@ void GameHandler::tick(const float dt) {
 
 GameHandler::GameHandler(Player& playerRef, sf::RenderWindow& windowRef, const sf::Sprite& mapSpriteRef) : player(playerRef), window(windowRef), mapSprite(mapSpriteRef) {}
 
-void GameHandler::createEnemy(sf::Vector2f spawnPosition, Player& playerReference) {
-    allEnemies.push_back(std::make_unique<Enemy>(spawnPosition, playerReference));
+void GameHandler::createEnemy(sf::Vector2f spawnPosition, Player& playerReference, EnemyType eType) {
+    allEnemies.push_back(std::make_unique<Enemy>(spawnPosition, playerReference, eType));
 }
 
 void GameHandler::updateEnemies(const float dt) {

@@ -1,0 +1,8 @@
+{
+  "MeleeEnemy" : {
+    "AttackDamage": 15,
+    "AttackRange": 75,
+    "Health": 100,
+    "MoveSpeed": 150
+  }
+}

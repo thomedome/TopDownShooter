@@ -15,13 +15,14 @@
 // Positional Updates - moving to target direction
 // Attack cooldown increase on tick
 // All common helper functions
+// Player Target Reference
 
 // Class Dependent Logic
 // Deciding where to move to
 // Attacking
 // Any extra moves
 
-Enemy::Enemy(const sf::Vector2f spawnPosition, Player& Target) : Target(Target) {
+Enemy::Enemy(const sf::Vector2f spawnPosition, Player& Target, EnemyType eType) : Target(Target), enemyType(eType) {
     mapPosition = spawnPosition;
     objOnScreen.setOrigin(objOnScreen.getLocalBounds().getCenter());
     moveSpeed = {150.f};
@@ -37,6 +38,8 @@ void Enemy::update(const float dt) {
     const float dirY = Target.getPosition().y - mapPosition.y;
     const float dist = std::sqrt(dirX * dirX + dirY * dirY);
 
+    distanceToTarget = dist;
+
     if (dist <= 2.f || dist == 0.0f) {
         this->targetDirection = sf::Vector2f(0.f, 0.f);
         return;
@@ -46,10 +49,6 @@ void Enemy::update(const float dt) {
 
     if (getAttackTimer() > 0.0f) {
         attackTimer -= dt;
-    }
-
-    if (dist < attackRange && getAttackTimer() <= 0.0f) {
-        attack();
     }
 
     healthBar.update(getPosition(), static_cast<int>(getHealth()), static_cast<int>(getMaxHealth())); // Why did i put this in the move function???

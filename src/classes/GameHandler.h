@@ -23,7 +23,7 @@ public:
     bool showFPS {};
     void tick(float dt);
     void updateEnemies(float dt);
-    void createEnemy(sf::Vector2f spawnPosition, Player& playerReference);
+    void createEnemy(sf::Vector2f spawnPosition, Player& playerReference, EnemyType eType);
     std::vector<Enemy*> getEnemiesInSpatialCell(sf::Vector2i Cell);
     std::vector<Enemy*> getEnemiesInRelativeCell(sf::Vector2i Cell);
 

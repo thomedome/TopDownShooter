@@ -39,6 +39,9 @@ add_executable(TopDownShooter
         src/classes/Button.h
         src/classes/healthbar.cpp
         src/classes/healthbar.h
+        src/classes/EnemyTypes.h
+        src/classes/MeleeEnemy.cpp
+        src/classes/MeleeEnemy.h
 )
 
 add_custom_command(

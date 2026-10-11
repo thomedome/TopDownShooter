@@ -44,4 +44,12 @@ struct BulletData {
     BulletData(sf::Vector2f pos1, sf::Vector2f pos2, int r, int d, float ms) : posToSpawn(pos1), destination(pos2), Range(r), damage(d), moveSpeed(ms) {}
 };
 
+struct EnemyData {
+    int health {};
+    int attackDamage {};
+    float attackRange {};
+    int score {};
+    float moveSpeed {};
+};
+
 #endif //TOPDOWNSHOOTER_COMMON_H
