@@ -7,46 +7,30 @@
 #include <cmath>
 #include <iostream>
 
+// Planning out enemy refactor:
+
+// Common Logic:
+// Spatial Cell Logic
+// Updating and redrawing Healthbar
+// Positional Updates - moving to target direction
+// Attack cooldown increase on tick
+// All common helper functions
+
+// Class Dependent Logic
+// Deciding where to move to
+// Attacking
+// Any extra moves
+
 Enemy::Enemy(const sf::Vector2f spawnPosition, Player& Target) : Target(Target) {
     mapPosition = spawnPosition;
     objOnScreen.setOrigin(objOnScreen.getLocalBounds().getCenter());
     moveSpeed = {150.f};
+
+    // This needs to change on refactor - when initialised, an Enum will be passed defining the type, then settings will follow.
     objOnScreen.setFillColor(sf::Color::Red);
     objOnScreen.setOutlineColor(sf::Color::White);
     objOnScreen.setOutlineThickness(2.0f);
 }
-
-// void Enemy::move(sf::Vector2f direction, const sf::Vector2f separationVector, const float dt) {
-//
-//     direction += separationVector;
-//
-//     if (direction != sf::Vector2f(0.f, 0.f)) {
-//         direction = direction.normalized();
-//     }
-//
-//     mapPosition += direction * moveSpeed * dt;
-//
-//     spatialCell = sf::Vector2i(std::floor(static_cast<int>(mapPosition.x) / spacialCellSize), std::floor(static_cast<int>(mapPosition.y) / spacialCellSize));
-//     objOnScreen.setPosition(mapPosition);
-// }
-//
-// void Enemy::update(const float dt) {
-//
-//     const float dirX = Target.getPosition().x - mapPosition.x;
-//     const float dirY = Target.getPosition().y - mapPosition.y;
-//
-//     // Get Distance via Pythagorean Theorem
-//     const float dist = std::sqrt(std::pow(dirX, 2.f) + std::pow(dirY, 2.f));
-//
-//     // Step Size for this frame.
-//
-//     const float step = moveSpeed * dt;
-//
-//     if (dist <= step || dist == 0.0f) {
-//         return;
-//     }
-//     mapPosition = sf::Vector2f(mapPosition.x + (dirX / dist) * step, mapPosition.y + (dirY / dist) * step);
-// }
 
 void Enemy::update(const float dt) {
     const float dirX = Target.getPosition().x - mapPosition.x;
@@ -67,6 +51,8 @@ void Enemy::update(const float dt) {
     if (dist < attackRange && getAttackTimer() <= 0.0f) {
         attack();
     }
+
+    healthBar.update(getPosition(), static_cast<int>(getHealth()), static_cast<int>(getMaxHealth())); // Why did i put this in the move function???
 }
 
 void Enemy::move(sf::Vector2f targetDir, const sf::Vector2f separationVector, const float dt) {
@@ -89,7 +75,6 @@ void Enemy::move(sf::Vector2f targetDir, const sf::Vector2f separationVector, co
         std::floor(static_cast<int>(mapPosition.y) / spacialCellSize)
     );
     objOnScreen.setPosition(mapPosition);
-    healthBar.update(getPosition(), static_cast<int>(getHealth()), static_cast<int>(getMaxHealth()));
 }
 
 void Enemy::draw(sf::RenderWindow& window) {
