@@ -8,6 +8,10 @@ int Entity::getHealth() const {
     return health;
 }
 
+int Entity::getMaxHealth() const {
+    return maxHealth;
+}
+
 std::string Entity::getName() {
     return name;
 }

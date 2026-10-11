@@ -89,10 +89,12 @@ void Enemy::move(sf::Vector2f targetDir, const sf::Vector2f separationVector, co
         std::floor(static_cast<int>(mapPosition.y) / spacialCellSize)
     );
     objOnScreen.setPosition(mapPosition);
+    healthBar.update(getPosition(), static_cast<int>(getHealth()), static_cast<int>(getMaxHealth()));
 }
 
-void Enemy::draw(sf::RenderWindow& window) const {
+void Enemy::draw(sf::RenderWindow& window) {
     window.draw(objOnScreen);
+    healthBar.draw(window);
 }
 
 sf::FloatRect Enemy::getBounds() const {

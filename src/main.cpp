@@ -15,7 +15,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode({static_cast<unsigned>(windowHeight * aspectRatio), windowHeight}), "Top Down Shooter");
     window.setVerticalSyncEnabled(true); // VSync
 
-    while (true) {
+    while (window.isOpen()) {
         const sf::Texture mapTexture {"assets/testMap.jpg"};
         sf::Sprite mapSprite(mapTexture);
 

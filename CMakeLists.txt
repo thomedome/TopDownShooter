@@ -37,6 +37,8 @@ add_executable(TopDownShooter
         src/classes/Enemy.h
         src/classes/Button.cpp
         src/classes/Button.h
+        src/classes/healthbar.cpp
+        src/classes/healthbar.h
 )
 
 add_custom_command(

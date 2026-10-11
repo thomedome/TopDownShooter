@@ -103,6 +103,7 @@ void Player::update(const float dt, const sf::RenderWindow &window) {
         playerView.setCenter(camView); // Set View to Player Pos
 
         heldWeapon.update(mousePos);
+        healthBar.update(getPosition(), static_cast<int>(getHealth()), static_cast<int>(getMaxHealth()));
 
         if (invinciblityTimer > 0.f) {
             invincible = true;
@@ -114,9 +115,10 @@ void Player::update(const float dt, const sf::RenderWindow &window) {
     }
 }
 
-void Player::draw(sf::RenderWindow& window) const {
+void Player::draw(sf::RenderWindow& window) {
     window.draw(objOnScreen);
     heldWeapon.draw(window);
+    healthBar.draw(window);
 }
 
 sf::Vector2f Player::getMousePosition() const {
@@ -145,8 +147,9 @@ void Player::Death() {
 void Player::takeDamage(int damage) {
     if (isAlive()) {
         if (!isInvincible()) {
-            std::cout << "Player Health: " << getHealth() << std::endl;
             health -= damage;
+
+            std::cout << "Player Health: " << getHealth() << std::endl;
 
             if (!isAlive()) {
                 Death();
