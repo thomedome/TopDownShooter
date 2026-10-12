@@ -34,7 +34,7 @@ Enemy::Enemy(const sf::Vector2f spawnPosition, Player& Target, EnemyType eType) 
     objOnScreen.setOutlineColor(sf::Color::White);
     objOnScreen.setOutlineThickness(2.0f);
 
-    fulfillStats(eType);
+    Enemy::fulfillStats(eType);
 }
 
 void Enemy::update(const float dt) {
