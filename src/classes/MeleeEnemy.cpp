@@ -9,17 +9,14 @@
 void MeleeEnemy::update(const float dt) {
     Enemy::update(dt); // maintain enemy update function
 
-    std::cout << "Updating" << std::endl;
-
-    // attackTimer tick inherited ^^
+    // attackTimer tick inherited from Enemy
     if (distanceToTarget < attackRange && getAttackTimer() <= 0.0f) {
-        std::cout << "Attacking!" << std::endl;
         attack();
     }
 }
 
-
 // This logic can be recycled because the original basic enemy was essentially a melee enemy without any fancy schnizz
+// But not inherited as not every enemy will move the same.
 void MeleeEnemy::move(sf::Vector2f targetDir, const sf::Vector2f separationVector, const float dt) {
     // Combine target intent and soft repulsion
     sf::Vector2f combinedDirection = targetDir + separationVector;
