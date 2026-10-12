@@ -8,8 +8,9 @@
 #include "Enemy.h"
 
 class MeleeEnemy : public Enemy{
+public:
+    MeleeEnemy(sf::Vector2f spawnPosition, Player& Target);
     void update(const float dt) override;
-
     void move(sf::Vector2f targetDir, sf::Vector2f separationVector, float dt);
 };
 

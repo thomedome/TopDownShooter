@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 
+#include "MeleeEnemy.h"
 #include "ProjectileManager.h"
 
 void GameHandler::tick(const float dt) {
@@ -20,7 +21,7 @@ void GameHandler::tick(const float dt) {
 GameHandler::GameHandler(Player& playerRef, sf::RenderWindow& windowRef, const sf::Sprite& mapSpriteRef) : player(playerRef), window(windowRef), mapSprite(mapSpriteRef) {}
 
 void GameHandler::createEnemy(sf::Vector2f spawnPosition, Player& playerReference, EnemyType eType) {
-    allEnemies.push_back(std::make_unique<Enemy>(spawnPosition, playerReference, eType));
+    allEnemies.push_back(std::make_unique<MeleeEnemy>(spawnPosition, playerReference));
 }
 
 void GameHandler::updateEnemies(const float dt) {

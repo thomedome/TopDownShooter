@@ -4,12 +4,16 @@
 
 #include "MeleeEnemy.h"
 #include <cmath>
+#include <iostream>
 
 void MeleeEnemy::update(const float dt) {
     Enemy::update(dt); // maintain enemy update function
 
+    std::cout << "Updating" << std::endl;
+
     // attackTimer tick inherited ^^
     if (distanceToTarget < attackRange && getAttackTimer() <= 0.0f) {
+        std::cout << "Attacking!" << std::endl;
         attack();
     }
 }
@@ -36,4 +40,8 @@ void MeleeEnemy::move(sf::Vector2f targetDir, const sf::Vector2f separationVecto
         std::floor(static_cast<int>(mapPosition.y) / spacialCellSize)
     );
     objOnScreen.setPosition(mapPosition);
+}
+
+MeleeEnemy::MeleeEnemy(sf::Vector2f spawnPosition, Player &Target) : Enemy(spawnPosition, Target, EnemyType::Melee) {
+
 }

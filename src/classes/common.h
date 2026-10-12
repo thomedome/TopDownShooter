@@ -4,6 +4,7 @@
 
 #ifndef TOPDOWNSHOOTER_COMMON_H
 #define TOPDOWNSHOOTER_COMMON_H
+#include "EnemyTypes.h"
 #include "SFML/Graphics.hpp"
 
 // Colours
@@ -51,5 +52,14 @@ struct EnemyData {
     int score {};
     float moveSpeed {};
 };
+
+inline std::string to_string(EnemyType eType) {
+    switch (eType) {
+        case EnemyType::Melee: return "MeleeEnemy";
+        case EnemyType::Ranged: return "RangedEnemy";
+        case EnemyType::Tank:    return "TankEnemy";
+        default:                return "Unknown";
+    }
+}
 
 #endif //TOPDOWNSHOOTER_COMMON_H

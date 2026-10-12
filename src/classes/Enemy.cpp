@@ -5,7 +5,9 @@
 #include "Enemy.h"
 #include "common.h"
 #include <cmath>
+#include <fstream>
 #include <iostream>
+#include "../json.hpp"
 
 // Planning out enemy refactor:
 
@@ -31,6 +33,8 @@ Enemy::Enemy(const sf::Vector2f spawnPosition, Player& Target, EnemyType eType) 
     objOnScreen.setFillColor(sf::Color::Red);
     objOnScreen.setOutlineColor(sf::Color::White);
     objOnScreen.setOutlineThickness(2.0f);
+
+    fulfillStats(eType);
 }
 
 void Enemy::update(const float dt) {
@@ -98,4 +102,21 @@ void Enemy::attack() {
 
 int Enemy::getScore() const {
     return score;
+}
+
+// Read from JSON
+void Enemy::fulfillStats(EnemyType eType) {
+
+    std::ifstream ifs("../src/config/enemyConfig.json");
+
+    if (!ifs.is_open()) {
+        std::cerr << "Couldn't open enemyConfig file..." << std::endl;
+        return;
+    }
+
+    nlohmann::json configFile = nlohmann::json::parse(ifs);
+    const std::string enemyName = to_string(eType);
+
+    damage = configFile[enemyName]["AttackDamage"];
+
 }
