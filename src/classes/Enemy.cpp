@@ -95,7 +95,7 @@ float Enemy::getAttackTimer() const {
 
 void Enemy::attack() {
     if (getAttackTimer() <= 0.0f) {
-        Target.takeDamage(damage);
+        // Target.takeDamage(damage); Needs to be moved to individual children classes
         attackTimer = enemyDamageCD;
     }
 }
@@ -117,6 +117,7 @@ void Enemy::fulfillStats(EnemyType eType) {
     nlohmann::json configFile = nlohmann::json::parse(ifs);
     const std::string enemyName = to_string(eType);
 
+    // Common Stats
     damage = configFile[enemyName]["AttackDamage"];
     attackRange = configFile[enemyName]["AttackRange"];
     health = configFile[enemyName]["Health"]; // This applies as max health

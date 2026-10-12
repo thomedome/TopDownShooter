@@ -51,7 +51,7 @@ public:
     int getScore() const;
     float getDistanceToTarget() const;
     EnemyType getEnemyType();
-    void fulfillStats(EnemyType eType);
+    virtual void fulfillStats(EnemyType eType);
     // int getDamage();
 protected:
     EnemyType enemyType;

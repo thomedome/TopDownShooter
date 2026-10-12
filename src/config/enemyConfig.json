@@ -2,7 +2,15 @@
   "MeleeEnemy" : {
     "AttackDamage": 15,
     "AttackRange": 75,
-    "Health": 100, 
+    "Health": 100,
     "MoveSpeed": 150
+  },
+
+  "RangedEnemy" : {
+    "AttackDamage" : 5,
+    "AttackRange" : 300,
+    "Health" : 75,
+    "MoveSpeed" : 200,
+    "BufferRange" : 100
   }
 }

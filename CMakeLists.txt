@@ -42,6 +42,8 @@ add_executable(TopDownShooter
         src/classes/EnemyTypes.h
         src/classes/MeleeEnemy.cpp
         src/classes/MeleeEnemy.h
+        src/classes/RangedEnemy.cpp
+        src/classes/RangedEnemy.h
 )
 
 add_custom_command(
