@@ -118,5 +118,9 @@ void Enemy::fulfillStats(EnemyType eType) {
     const std::string enemyName = to_string(eType);
 
     damage = configFile[enemyName]["AttackDamage"];
+    attackRange = configFile[enemyName]["AttackRange"];
+    health = configFile[enemyName]["Health"]; // This applies as max health
+    moveSpeed = configFile[enemyName]["MoveSpeed"];
+    maxHealth = health;
 
 }
