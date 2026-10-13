@@ -11,6 +11,7 @@
 
 namespace Colours {
     const sf::Color darkRed {100, 0, 0};
+    const sf::Color Purple {191, 64, 191};
 }
 
 constexpr int mapHeight = 3000;

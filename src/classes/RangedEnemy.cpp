@@ -29,6 +29,8 @@ RangedEnemy::RangedEnemy(sf::Vector2f spawnPosition, Player &Target) : Enemy(spa
     nlohmann::json configFile = nlohmann::json::parse(ifs);
 
     loadRangedStats(configFile);
+
+    objOnScreen.setFillColor(Colours::Purple);
 }
 
 void RangedEnemy::move(sf::Vector2f targetDir, sf::Vector2f separationVector, const float dt) {
