@@ -150,8 +150,6 @@ void Player::takeDamage(int damage) {
         if (!isInvincible()) {
             health -= damage;
 
-            std::cout << "Player Health: " << getHealth() << std::endl;
-
             if (!isAlive()) {
                 Death();
             }

@@ -12,7 +12,7 @@
 void RangedEnemy::loadRangedStats(const nlohmann::json& json) {
     const std::string eName = to_string(enemyType);
     bufferRange = json[eName]["BufferRange"].get<float>();
-    retreatRange = attackRange / 3;
+    retreatRange = static_cast<float>(attackRange / 1.5);
     shootingCD = json[eName]["AttackCooldown"].get<float>();
 }
 
@@ -81,7 +81,6 @@ void RangedEnemy::update(float deltaTime) {
         // Gets updated within ProjManager
 
         attackTimer = shootingCD;
-        std::cout << shootingCD << std::endl;
     }
 }
 
