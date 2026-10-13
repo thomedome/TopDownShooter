@@ -41,3 +41,7 @@ sf::FloatRect Bullet::getBounds() {
 int Bullet::getDamage() {
     return damage;
 }
+
+Team::Team Bullet::getTeam() {
+    return team;
+}

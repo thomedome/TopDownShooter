@@ -35,6 +35,7 @@ Enemy::Enemy(const sf::Vector2f spawnPosition, Player& Target, EnemyType eType) 
     objOnScreen.setOutlineThickness(2.0f);
 
     Enemy::fulfillStats(eType);
+    entityTeam = Team::Enemy;
 }
 
 void Enemy::update(const float dt) {

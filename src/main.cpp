@@ -89,7 +89,7 @@ int main() {
                     auto angle = 2.f * PI * i / enemyCount;
                     sf::Vector2f spawnPosition {playerPos.x + std::cos(angle) * waveSpawnRadius, playerPos.y + std::sin(angle) * waveSpawnRadius};
 
-                    gameHandler.createEnemy(spawnPosition, player, EnemyType::Melee); // Just forcing melee for now - when i have multiple types, do spawn budget method for waves.
+                    gameHandler.createEnemy(spawnPosition, player, EnemyType::Ranged); // Just forcing melee for now - when i have multiple types, do spawn budget method for waves.
                 }
             }
 

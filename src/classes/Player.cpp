@@ -14,6 +14,7 @@ Player::Player(const sf::Vector2f spawnPosition) : heldWeapon(*this) {
     mapPosition = spawnPosition;
     objOnScreen.setOrigin(objOnScreen.getLocalBounds().getCenter());
     heldWeapon.objectOnScreen.setPosition(mapPosition);
+    entityTeam = Team::Player;
 }
 
 PlayerState Player::getPlayerState() const {
@@ -170,4 +171,8 @@ int Player::getScore() const {
 
 bool Player::getRestartFlag() const {
     return restartFlag;
+}
+
+sf::FloatRect Player::getBounds() const {
+    return objOnScreen.getGlobalBounds();
 }

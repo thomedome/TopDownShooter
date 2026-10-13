@@ -5,10 +5,11 @@
 #include "Weapon.h"
 #include "Bullet.h"
 #include "common.h"
+#include "Enemy.h"
 #include "Player.h"
 #include "SFML/Graphics/Color.hpp"
 
-Weapon::Weapon(Player& owner) : Parent(owner) {
+Weapon::Weapon(Entity& owner) : Parent(owner) {
     objectOnScreen.setFillColor(sf::Color::Black);
     objectOnScreen.setOrigin({-10.f, objectOnScreen.getSize().y / 2}); // This is a test weapon for now... unless I want to make cube warfare ;p
 }
@@ -18,8 +19,21 @@ void Weapon::draw(sf::RenderWindow& window) const {
 }
 
 Bullet Weapon::createBullet() const {
-    const BulletData bulletData {Parent.getPosition(), Parent.getMousePosition(), Range, damage, projectileVelocity};
-    return Bullet {bulletData};
+
+    switch (Parent.getTeam()) {
+        case Team::Player: {
+            auto* playerCast = dynamic_cast<Player*>(&Parent);
+            return Bullet{ BulletData{playerCast->getPosition(), playerCast->getMousePosition(), Range, damage, projectileVelocity}, Team::Player };
+        }
+
+        case Team::Enemy: {
+            auto* enemyCast = dynamic_cast<Enemy*>(&Parent);
+            return Bullet{ BulletData{enemyCast->getPosition(), enemyCast->Target.getPosition(), 9999999, damage, projectileVelocity}, Team::Enemy };
+        }
+
+        default:
+            throw std::runtime_error("Unknown team type");
+    }
 }
 
 void Weapon::update(const sf::Vector2f mousePosition) {

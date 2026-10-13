@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include "common.h"
+#include "Entity.h"
 #include "SFML/Graphics.hpp"
 
 class Bullet {
@@ -22,8 +23,8 @@ public:
     bool destroyFlag {false};
 
 
-    Bullet(const BulletData& bd) // Constructor
-    : position(bd.posToSpawn), Range(bd.Range), damage(bd.damage), moveSpeed(bd.moveSpeed), destination(bd.destination)
+    Bullet(const BulletData& bd, Team::Team team) // Constructor
+    : position(bd.posToSpawn), Range(bd.Range), damage(bd.damage), moveSpeed(bd.moveSpeed), destination(bd.destination), team(team)
     {
         // Calculating the direction vector (Target Pos - Current Pos)
 
@@ -46,12 +47,14 @@ public:
     sf::FloatRect getBounds();
 
     int getDamage();
+    Team::Team getTeam();
 
 private:
     sf::RectangleShape objectOnScreen{sf::Vector2f(5, 5)};
     sf::Vector2f position;
     sf::Vector2i SpatialCell {0, 0};
 
+    Team::Team team {};
     int Range {}; // Added from constructor
     int damage {}; // ^
     float moveSpeed {300.f}; // ^

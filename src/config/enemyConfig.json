@@ -9,6 +9,7 @@
   "RangedEnemy" : {
     "AttackDamage" : 5,
     "AttackRange" : 300,
+    "AttackCooldown" : 0.75,
     "Health" : 75,
     "MoveSpeed" : 200,
     "BufferRange" : 100

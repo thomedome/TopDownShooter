@@ -8,30 +8,6 @@
 #include "Entity.h"
 #include "Player.h"
 #include "EnemyTypes.h"
-//
-// class Enemy : public Entity {
-//     public:
-//         Player& Target;
-//         sf::RectangleShape objOnScreen {sf::Vector2f(35, 35)};
-//
-//         Enemy(sf::Vector2f spawnPosition, Player& Target);
-//
-//         void update(const float dt);
-//         void draw(sf::RenderWindow& window);
-//         sf::FloatRect getBounds() const;
-//         void move(const sf::Vector2f direction, const sf::Vector2f separationVector, const float dt);
-//         void attack(); // Just a float-y idea, some enemy classes / some debuff would attack others. So keep entity class instead of just player.
-//         float getAttackTimer() const;
-//         int getScore() const;
-//         // int getDamage();
-//     private:
-//         sf::Vector2f targetDirection;
-//         float attackTimer {0.0f};
-//         float attackRange {75.f};
-//         int damage {25};
-//         int score {10};
-// };
-
 
 class Enemy : public Entity {
 public:
@@ -43,7 +19,7 @@ public:
     virtual ~Enemy() = default;
 
     virtual void update(const float dt);
-    void draw(sf::RenderWindow& window);
+    virtual void draw(sf::RenderWindow& window);
     sf::FloatRect getBounds() const;
     virtual void move(const sf::Vector2f direction, const sf::Vector2f separationVector, const float dt);
     void attack(); // Just a float-y idea, some enemy classes / some debuff would attack others. So keep entity class instead of just player.

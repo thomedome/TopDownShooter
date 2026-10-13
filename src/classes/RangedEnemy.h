@@ -34,17 +34,25 @@ enum RangedEnemyState {
 class RangedEnemy : public Enemy {
     public:
     void update(float deltaTime) override;
-    void move(sf::Vector2f targetDir, sf::Vector2f separationVector, float dt);
+    void move(sf::Vector2f targetDir, sf::Vector2f separationVector, float dt) override;
+    void draw(sf::RenderWindow &window) override;
 
     RangedEnemy(sf::Vector2f spawnPosition, Player& Target);
 
     RangedEnemyState getState() const;
     void loadRangedStats(const nlohmann::json& json); // Import Ranged Stats as cannot do within enemy func
+    Weapon& getWeapon();
+    bool getFiringFlag() const;
+    void setFiringFlag(bool firingFlag);
 
-    private:
+    protected:
     RangedEnemyState currentState {Approaching};
     float bufferRange {};
     float retreatRange {};
+    float shootingCD {};
+    bool wantsToFire {false}; // Used to ensure that RangedEnemy doesnt have access to the ProjectileManager -> GameHandler
+
+    Weapon heldWeapon{*this};
 };
 
 

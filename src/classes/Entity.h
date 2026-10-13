@@ -9,6 +9,13 @@
 // Entity is the core class for any object that is alive and can move around, has HP etc.
 // For now, sprite initialisation will belong to the child classes as I don't have sprites for characters yet. sf::RectangleShape assemble!
 
+namespace Team {
+    enum Team {
+        Player,
+        Enemy
+    };
+}
+
 class Entity {
 public:
     // Helper Functions
@@ -21,6 +28,7 @@ public:
     void setPosition(const sf::Vector2f& position);
     virtual void takeDamage(int damage);
     bool isInvincible();
+    Team::Team getTeam() const;
 
 protected:
     float invinciblityTimer {0.0f};
@@ -32,6 +40,7 @@ protected:
     int maxHealth {100};
     std::string name {};
     healthbar healthBar {*this};
+    Team::Team entityTeam {};
 };
 
 #endif //TOPDOWNSHOOTER_ENTITY_H

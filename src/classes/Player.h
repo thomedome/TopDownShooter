@@ -23,6 +23,7 @@ public:
     void addScore(int addingScore);
     int getScore() const;
     bool getRestartFlag() const;
+    sf::FloatRect getBounds() const;
 
 private:
     sf::Vector2f mousePos;

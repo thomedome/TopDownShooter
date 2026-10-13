@@ -1,10 +1,12 @@
 #include "GameHandler.h"
 
 #include <algorithm>
+#include <complex>
 #include <iostream>
 
 #include "MeleeEnemy.h"
 #include "ProjectileManager.h"
+#include "RangedEnemy.h"
 
 void GameHandler::tick(const float dt) {
     window.setView(player.getPlayerView());
@@ -21,7 +23,7 @@ void GameHandler::tick(const float dt) {
 GameHandler::GameHandler(Player& playerRef, sf::RenderWindow& windowRef, const sf::Sprite& mapSpriteRef) : player(playerRef), window(windowRef), mapSprite(mapSpriteRef) {}
 
 void GameHandler::createEnemy(sf::Vector2f spawnPosition, Player& playerReference, EnemyType eType) {
-    allEnemies.push_back(std::make_unique<MeleeEnemy>(spawnPosition, playerReference));
+    allEnemies.push_back(std::make_unique<RangedEnemy>(spawnPosition, playerReference));
 }
 
 void GameHandler::updateEnemies(const float dt) {
@@ -44,8 +46,18 @@ void GameHandler::updateEnemies(const float dt) {
        allEnemies.end()
        );
 
+    // standard update func + assign Spatial Cells
     for (const auto& enemy : allEnemies) {
         enemy->update(dt);
+
+        auto* rep = dynamic_cast<RangedEnemy*>(enemy.get());
+
+        if (rep != nullptr) {
+            if (rep->getFiringFlag()) {
+                projectileManager.addBullet(rep->getWeapon());
+                rep->setFiringFlag(false);
+            }
+        }
 
         sf::Vector2i Cell {enemy->getSpatialCell()};
 
@@ -55,6 +67,7 @@ void GameHandler::updateEnemies(const float dt) {
         spatialGridCells[Cell.x][Cell.y].push_back(enemy.get());
     }
 
+    // Collision check
     for (auto& enemy : allEnemies) {
         const sf::Vector2i Cell {enemy->getSpatialCell()};
 
@@ -93,22 +106,41 @@ void GameHandler::updateEnemies(const float dt) {
         enemy->draw(window);
     }
 
+    // Collision Checks -> bullets
     for (auto& bullet : projectileManager.getBullets()) {
         const sf::Vector2i testingCell = bullet.getSpatialCell();
-        std::vector<Enemy*> enemiesInCell = getEnemiesInRelativeCell(testingCell);
 
-        for (auto enemy : enemiesInCell) {
-            if (bullet.getBounds().findIntersection(enemy->getBounds())) {
-                bullet.destroyFlag = true;
-                int dmg = bullet.getDamage();
 
-                enemy->takeDamage(dmg);
+        if (bullet.getTeam() == Team::Player) {
+            std::vector<Enemy*> enemiesInCell = getEnemiesInRelativeCell(testingCell);
+            for (auto enemy : enemiesInCell) {
+                if (bullet.getBounds().findIntersection(enemy->getBounds())) {
+                    bullet.destroyFlag = true;
+                    int dmg = bullet.getDamage();
 
-                if (!enemy->isAlive()) {
-                    player.addScore(enemy->getScore());
+                    enemy->takeDamage(dmg);
+
+                    if (!enemy->isAlive()) {
+                        player.addScore(enemy->getScore());
+                    }
                 }
             }
+        } else if (bullet.getTeam() == Team::Enemy) {
+                if (bullet.getBounds().findIntersection(player.getBounds())) {
+                    bullet.destroyFlag = true;
+                    int dmg = bullet.getDamage();
+
+                    player.takeDamage(dmg);
+
+                    if (!player.isAlive()) {
+                        player.addScore(player.getScore());
+                    }
+                }
+        } else {
+
         }
+
+
     }
 }
 

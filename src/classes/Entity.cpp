@@ -43,3 +43,7 @@ void Entity::setPosition(const sf::Vector2f& position) {
 bool Entity::isInvincible() {
     return invincible;
 }
+
+Team::Team Entity::getTeam() const {
+    return entityTeam;
+}

@@ -3,13 +3,14 @@
 
 #include "SFML/Graphics.hpp"
 #include "common.h"
+#include "Entity.h"
 
 class Player;
 class Bullet;
 
 class Weapon {
 
-    Player& Parent;
+    Entity& Parent;
 
 public:
     int damage {10};
@@ -20,7 +21,7 @@ public:
 
     sf::RectangleShape objectOnScreen{{25, 10}};
 
-    explicit Weapon(Player& owner);
+    explicit Weapon(Entity& owner);
 
     Bullet createBullet() const;
 
