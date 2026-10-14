@@ -78,7 +78,7 @@ void RangedEnemy::update(float deltaTime) {
     Enemy::update(deltaTime);
     heldWeapon.update(Target.getPosition());
 
-    if (getAttackTimer() <= 0.0f) {
+    if (getAttackTimer() <= 0.0f && currentState == Firing) {
         wantsToFire = true;
         // Gets updated within ProjManager
 
