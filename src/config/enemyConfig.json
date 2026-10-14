@@ -3,7 +3,8 @@
     "AttackDamage": 15,
     "AttackRange": 75,
     "Health": 100,
-    "MoveSpeed": 150
+    "MoveSpeed": 150,
+    "GenerationCost" : 1
   },
 
   "RangedEnemy" : {
@@ -12,6 +13,7 @@
     "AttackCooldown" : 0.75,
     "Health" : 75,
     "MoveSpeed" : 200,
-    "BufferRange" : 100
+    "BufferRange" : 100,
+    "GenerationCost" : 3
   }
 }

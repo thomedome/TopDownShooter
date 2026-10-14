@@ -3,3 +3,13 @@
 //
 
 #include "WaveManager.h"
+
+WaveManager::WaveManager(const int initalisedBudget) : allocatedBudget(initalisedBudget) {
+
+}
+
+void WaveManager::generateWave() {
+    while (allocatedBudget > 0) {
+
+    }
+}
