@@ -13,8 +13,6 @@
 
 WaveManager::WaveManager(const int initalisedBudget) : allocatedBudget(initalisedBudget) {
 
-    std::cout << "Current working dir: " << std::filesystem::current_path() << std::endl;
-
     std::ifstream ifs("../src/config/config.json");
 
     if (!ifs.is_open()) {
@@ -39,7 +37,6 @@ void WaveManager::generateWave(Player& player) {
 
         currentWave.push_back(affordedEnemy.eType);
         allocatedBudget -= affordedEnemy.Cost;
-        std::cout << "gen wave : " << affordedEnemy.Cost << std::endl;
     }
 
     const auto enemyCount {currentWave.size()};
@@ -74,8 +71,6 @@ void WaveManager::generateWave(Player& player) {
 }
 
 EnemyClassInfo WaveManager::getHighestEnemy(const int budget) {
-
-    std::cout << "Dictionary size: " << enemyInfoDictionary.size() << " | Budget: " << budget << std::endl;
 
     EnemyClassInfo affordableEnemy {Unassigned, 0, 0};
 

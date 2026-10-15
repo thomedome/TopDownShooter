@@ -99,12 +99,9 @@ int main() {
 
             if (waveManager.allEnemies.empty()) {
                 wave += 1;
-                std::cout << "new wave" << std::endl;
                 waveManager.incrementBudget(wave);
                 waveManager.generateWave(player);
             }
-
-            std::cout << "passed" << std::endl;
 
             gameHandler.tick(dt);
 

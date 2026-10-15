@@ -14,6 +14,7 @@ void RangedEnemy::loadRangedStats(const nlohmann::json& json) {
     bufferRange = json[eName]["BufferRange"].get<float>();
     retreatRange = static_cast<float>(attackRange / 1.5);
     shootingCD = json[eName]["AttackCooldown"].get<float>();
+    damage = json[eName]["AttackDamage"].get<int>();
 }
 
 RangedEnemy::RangedEnemy(sf::Vector2f spawnPosition, Player &Target) : Enemy(spawnPosition, Target, Ranged) {

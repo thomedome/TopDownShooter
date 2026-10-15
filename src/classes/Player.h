@@ -26,6 +26,7 @@ public:
     sf::FloatRect getBounds() const;
 
 private:
+    int damageInGun {};
     sf::Vector2f mousePos;
     Weapon heldWeapon;
     PlayerState playerState {Stationary};

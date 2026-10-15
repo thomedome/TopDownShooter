@@ -21,7 +21,7 @@ public:
 
     sf::RectangleShape objectOnScreen{{25, 10}};
 
-    explicit Weapon(Entity& owner);
+    explicit Weapon(Entity& owner, int damagePerShot);
 
     Bullet createBullet() const;
 

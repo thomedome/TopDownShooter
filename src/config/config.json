@@ -2,5 +2,9 @@
   "WaveSettings" : {
     "StartingBudget" : 2,
     "ScalingFactor" : 3
+  },
+
+  "PlayerSettings" : {
+    "WeaponFiringDamage" : 10
   }
 }

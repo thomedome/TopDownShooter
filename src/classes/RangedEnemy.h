@@ -52,7 +52,7 @@ class RangedEnemy : public Enemy {
     float shootingCD {};
     bool wantsToFire {false}; // Used to ensure that RangedEnemy doesnt have access to the ProjectileManager -> GameHandler
 
-    Weapon heldWeapon{*this};
+    Weapon heldWeapon{*this, damage};;
 };
 
 

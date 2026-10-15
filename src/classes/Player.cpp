@@ -6,11 +6,25 @@
 
 #include <algorithm>
 #include <cmath>
+#include <fstream>
 #include <iostream>
+#include "../json.hpp"
 
 #include "Weapon.h"
 
-Player::Player(const sf::Vector2f spawnPosition) : heldWeapon(*this) {
+Player::Player(const sf::Vector2f spawnPosition) {
+    std::ifstream ifs ("../src/config/config.json");
+
+    if (!ifs.is_open()) {
+        std::cerr << "Cannot open player config..." << std::endl;
+        return;
+    }
+
+    nlohmann::json configFile = nlohmann::json::parse(ifs);
+
+    damageInGun = configFile["PlayerSettings"]["WeaponFiringDamage"].get<int>();
+
+    heldWeapon = Weapon (*this, damageInGun);
     mapPosition = spawnPosition;
     objOnScreen.setOrigin(objOnScreen.getLocalBounds().getCenter());
     heldWeapon.objectOnScreen.setPosition(mapPosition);

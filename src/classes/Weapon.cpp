@@ -9,7 +9,7 @@
 #include "Player.h"
 #include "SFML/Graphics/Color.hpp"
 
-Weapon::Weapon(Entity& owner) : Parent(owner) {
+Weapon::Weapon(Entity& owner, int DamagePerShot) : Parent(owner), damage(DamagePerShot) {
     objectOnScreen.setFillColor(sf::Color::Black);
     objectOnScreen.setOrigin({-10.f, objectOnScreen.getSize().y / 2}); // This is a test weapon for now... unless I want to make cube warfare ;p
 }
@@ -28,7 +28,7 @@ Bullet Weapon::createBullet() const {
 
         case Team::Enemy: {
             auto* enemyCast = dynamic_cast<Enemy*>(&Parent);
-            return Bullet{ BulletData{enemyCast->getPosition(), enemyCast->Target.getPosition(), 9999999, damage, projectileVelocity}, Team::Enemy };
+            return Bullet{ BulletData{enemyCast->getPosition(), enemyCast->Target.getPosition(), 3000, damage, projectileVelocity}, Team::Enemy };
         }
 
         default:
