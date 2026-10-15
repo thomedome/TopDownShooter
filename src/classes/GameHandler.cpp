@@ -1,12 +1,11 @@
 #include "GameHandler.h"
 
 #include <algorithm>
-#include <complex>
-#include <iostream>
 
 #include "MeleeEnemy.h"
 #include "ProjectileManager.h"
 #include "RangedEnemy.h"
+#include "WaveManager.h"
 
 void GameHandler::tick(const float dt) {
     window.setView(player.getPlayerView());
@@ -20,11 +19,7 @@ void GameHandler::tick(const float dt) {
     projectileManager.updateProjectiles(dt, window);
 }
 
-GameHandler::GameHandler(Player& playerRef, sf::RenderWindow& windowRef, const sf::Sprite& mapSpriteRef) : player(playerRef), window(windowRef), mapSprite(mapSpriteRef) {}
-
-void GameHandler::createEnemy(sf::Vector2f spawnPosition, Player& playerReference, EnemyType eType) {
-    allEnemies.push_back(std::make_unique<RangedEnemy>(spawnPosition, playerReference));
-}
+GameHandler::GameHandler(Player& playerRef, sf::RenderWindow& windowRef, const sf::Sprite& mapSpriteRef, WaveManager& wave_manager) : player(playerRef), window(windowRef), mapSprite(mapSpriteRef), wave_manager(wave_manager) {}
 
 void GameHandler::updateEnemies(const float dt) {
 
@@ -35,19 +30,19 @@ void GameHandler::updateEnemies(const float dt) {
         }
     }
 
-    allEnemies.erase(
+    wave_manager.allEnemies.erase(
        std::remove_if(
-           allEnemies.begin(),
-           allEnemies.end(),
+           wave_manager.allEnemies.begin(),
+           wave_manager.allEnemies.end(),
            [](const auto& enemy) {
                return !enemy->isAlive();
            }
        ),
-       allEnemies.end()
+       wave_manager.allEnemies.end()
        );
 
     // standard update func + assign Spatial Cells
-    for (const auto& enemy : allEnemies) {
+    for (const auto& enemy : wave_manager.allEnemies) {
         enemy->update(dt);
 
         auto* rep = dynamic_cast<RangedEnemy*>(enemy.get());
@@ -68,7 +63,7 @@ void GameHandler::updateEnemies(const float dt) {
     }
 
     // Collision check
-    for (auto& enemy : allEnemies) {
+    for (auto& enemy : wave_manager.allEnemies) {
         const sf::Vector2i Cell {enemy->getSpatialCell()};
 
         std::vector<Enemy*> inCell = getEnemiesInRelativeCell(Cell);

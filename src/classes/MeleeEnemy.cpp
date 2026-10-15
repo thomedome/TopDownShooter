@@ -11,6 +11,7 @@ void MeleeEnemy::update(const float dt) {
 
     // attackTimer tick inherited from Enemy
     if (distanceToTarget < attackRange && getAttackTimer() <= 0.0f) {
+        Target.takeDamage(damage);
         attack();
     }
 }

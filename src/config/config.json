@@ -1,0 +1,6 @@
+{
+  "WaveSettings" : {
+    "StartingBudget" : 2,
+    "ScalingFactor" : 3
+  }
+}

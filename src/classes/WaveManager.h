@@ -10,22 +10,39 @@
 
 struct EnemyClassInfo {
     EnemyType eType;
-    unsigned int Cost {};
+    int Cost {};
     unsigned int waveUnlocked {};
+};
+
+// Just a prototype - will refactor to fill on runtime when working
+struct EnemyDict {
+    EnemyClassInfo MeleeEnemy {Melee, 1, 1};
+    EnemyClassInfo RangedEnemy {Ranged, 3, 3};
 };
 
 class WaveManager {
     public:
-    void generateWave();
+    void generateWave(Player& player);
 
     WaveManager(const int initalisedBudget);
 
+    std::vector<std::unique_ptr<Enemy>> allEnemies;
+
+    void incrementBudget(const int wave);
+
     private:
+    EnemyClassInfo getHighestEnemy(const int budget);
 
-    std::vector<EnemyClassInfo> enemyInfoDictionary;
+    std::vector<EnemyClassInfo> enemyInfoDictionary {
+        {Melee, 1, 1},
+        {Ranged, 3, 3}
+    };
 
-    std::vector<EnemyClassInfo> currentWave;
+    std::vector<EnemyType> currentWave;
     int allocatedBudget {};
+
+    int startingBudget {};
+    int scalingFactor {};
 
 };
 

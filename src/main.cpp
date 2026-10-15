@@ -1,5 +1,7 @@
 #include <cmath>
+#include <fstream>
 #include <iostream>
+#include <istream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
 
@@ -7,6 +9,8 @@
 #include "classes/common.h"
 #include "classes/GameHandler.h"
 #include "classes/ProjectileManager.h"
+#include "json.hpp"
+#include "classes/WaveManager.h"
 
 sf::Font font("assets/fonts/LiberationSans-Regular.ttf");
 
@@ -28,12 +32,27 @@ int main() {
         sf::Text WaveObj{font, "Wave: 1"};
         sf::Text ScoreOBj{font, "Score: 0"};
 
+        std::ifstream ifs("../src/config/config.json");
+
+        if (!ifs.is_open()) {
+            std::cerr << "Couldn't open config file..." << std::endl;
+            return 0;
+        }
+
+        nlohmann::json configFile = nlohmann::json::parse(ifs);
+
         int wave = 0;
+        int allocatedBudget;
+        int startingBudget = configFile["WaveSettings"]["StartingBudget"].get<int>();
+
+        ifs.close();
+
+        WaveManager waveManager {startingBudget};
 
         sf::Clock dtClock;
 
         Player player {sf::Vector2f(1500, 1500)};
-        GameHandler gameHandler(player, window, mapSprite);
+        GameHandler gameHandler(player, window, mapSprite, waveManager);
 
         const auto onClose = [&window](const sf::Event::Closed&)
         {
@@ -78,20 +97,14 @@ int main() {
 
             window.handleEvents(onClose, onKeyPressed, onMousePressed); // One Off Keycodes
 
-            if (gameHandler.allEnemies.empty()) {
+            if (waveManager.allEnemies.empty()) {
                 wave += 1;
-
-                sf::Vector2f playerPos {player.getPosition()};
-
-                const auto enemyCount = static_cast<float>(wave * 3);
-
-                for (int i = 0; i < enemyCount; ++i) {
-                    auto angle = 2.f * PI * i / enemyCount;
-                    sf::Vector2f spawnPosition {playerPos.x + std::cos(angle) * waveSpawnRadius, playerPos.y + std::sin(angle) * waveSpawnRadius};
-
-                    gameHandler.createEnemy(spawnPosition, player, EnemyType::Ranged); // Just forcing melee for now - when i have multiple types, do spawn budget method for waves.
-                }
+                std::cout << "new wave" << std::endl;
+                waveManager.incrementBudget(wave);
+                waveManager.generateWave(player);
             }
+
+            std::cout << "passed" << std::endl;
 
             gameHandler.tick(dt);
 
