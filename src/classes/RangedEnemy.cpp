@@ -15,6 +15,8 @@ void RangedEnemy::loadRangedStats(const nlohmann::json& json) {
     retreatRange = static_cast<float>(attackRange / 1.5);
     shootingCD = json[eName]["AttackCooldown"].get<float>();
     damage = json[eName]["AttackDamage"].get<int>();
+
+    heldWeapon = std::make_unique<Weapon>(*this, damage);
 }
 
 RangedEnemy::RangedEnemy(sf::Vector2f spawnPosition, Player &Target) : Enemy(spawnPosition, Target, Ranged) {
@@ -67,8 +69,8 @@ void RangedEnemy::move(sf::Vector2f targetDir, sf::Vector2f separationVector, co
     objOnScreen.setPosition(mapPosition);
 }
 
-Weapon &RangedEnemy::getWeapon() {
-    return heldWeapon;
+Weapon *RangedEnemy::getWeapon() {
+    return heldWeapon.get();
 }
 
 RangedEnemyState RangedEnemy::getState() const {
@@ -77,7 +79,7 @@ RangedEnemyState RangedEnemy::getState() const {
 
 void RangedEnemy::update(float deltaTime) {
     Enemy::update(deltaTime);
-    heldWeapon.update(Target.getPosition());
+    heldWeapon->update(Target.getPosition());
 
     if (getAttackTimer() <= 0.0f && currentState == Firing) {
         wantsToFire = true;
@@ -97,5 +99,5 @@ void RangedEnemy::setFiringFlag(bool firingFlag) {
 
 void RangedEnemy::draw(sf::RenderWindow &window) {
     Enemy::draw(window);
-    heldWeapon.draw(window);
+    heldWeapon->draw(window);
 }

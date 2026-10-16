@@ -49,7 +49,7 @@ void GameHandler::updateEnemies(const float dt) {
 
         if (rep != nullptr) {
             if (rep->getFiringFlag()) {
-                projectileManager.addBullet(&rep->getWeapon());
+                projectileManager.addBullet(rep->getWeapon());
                 rep->setFiringFlag(false);
             }
         }

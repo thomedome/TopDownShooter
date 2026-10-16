@@ -41,7 +41,7 @@ class RangedEnemy : public Enemy {
 
     RangedEnemyState getState() const;
     void loadRangedStats(const nlohmann::json& json); // Import Ranged Stats as cannot do within enemy func
-    Weapon& getWeapon();
+    Weapon *getWeapon();
     bool getFiringFlag() const;
     void setFiringFlag(bool firingFlag);
 
@@ -52,7 +52,7 @@ class RangedEnemy : public Enemy {
     float shootingCD {};
     bool wantsToFire {false}; // Used to ensure that RangedEnemy doesnt have access to the ProjectileManager -> GameHandler
 
-    Weapon heldWeapon{*this, damage};;
+    std::unique_ptr<Weapon> heldWeapon;
 };
 
 

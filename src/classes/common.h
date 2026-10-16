@@ -23,7 +23,7 @@ constexpr float aspectRatio = 16.f / 9.f;
 
 constexpr int windowHeight = 1080;
 
-constexpr float attackInvincibilityTimer = 1.0f;
+constexpr float attackInvincibilityTimer = 0.5f;
 
 constexpr float waveSpawnRadius = 750.f;
 

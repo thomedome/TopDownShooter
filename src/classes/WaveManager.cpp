@@ -30,6 +30,8 @@ WaveManager::WaveManager(const int initalisedBudget) : allocatedBudget(initalise
 
 void WaveManager::generateWave(Player& player) {
 
+    currentWave.clear();
+
     while (allocatedBudget > 0) {
         const EnemyClassInfo affordedEnemy = getHighestEnemy(allocatedBudget);
 
