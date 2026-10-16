@@ -8,8 +8,8 @@
 
 ProjectileManager::ProjectileManager(GameHandler& gh) : ghRef(gh) {}
 
-void ProjectileManager::addBullet(Weapon& weapon) {
-    const Bullet newBullet = weapon.createBullet();
+void ProjectileManager::addBullet(Weapon* weapon) {
+    const Bullet newBullet = weapon->createBullet();
     AllBullets.push_back(newBullet);
 }
 

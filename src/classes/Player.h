@@ -17,7 +17,8 @@ public:
     sf::Vector2f getMousePosition() const;
     sf::Vector2f getPosition() const;
     sf::View& getPlayerView();
-    Weapon& getWeapon();
+
+    Weapon *getWeapon();
     void Death();
     void takeDamage(int damage) override;
     void addScore(int addingScore);
@@ -28,7 +29,7 @@ public:
 private:
     int damageInGun {};
     sf::Vector2f mousePos;
-    Weapon heldWeapon;
+    std::unique_ptr<Weapon> heldWeapon;
     PlayerState playerState {Stationary};
     sf::View playerView{mapPosition, {windowHeight * aspectRatio, windowHeight}};
     sf::RectangleShape objOnScreen {sf::Vector2f(50, 50)};

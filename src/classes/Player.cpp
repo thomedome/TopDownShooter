@@ -24,10 +24,10 @@ Player::Player(const sf::Vector2f spawnPosition) {
 
     damageInGun = configFile["PlayerSettings"]["WeaponFiringDamage"].get<int>();
 
-    heldWeapon = Weapon (*this, damageInGun);
+    heldWeapon = std::make_unique<Weapon>(*this, damageInGun);
     mapPosition = spawnPosition;
     objOnScreen.setOrigin(objOnScreen.getLocalBounds().getCenter());
-    heldWeapon.objectOnScreen.setPosition(mapPosition);
+    heldWeapon->objectOnScreen.setPosition(mapPosition);
     entityTeam = Team::Player;
 }
 
@@ -117,7 +117,7 @@ void Player::update(const float dt, const sf::RenderWindow &window) {
 
         playerView.setCenter(camView); // Set View to Player Pos
 
-        heldWeapon.update(mousePos);
+        heldWeapon->update(mousePos);
         healthBar.update(getPosition(), static_cast<int>(getHealth()), static_cast<int>(getMaxHealth()));
 
         if (invinciblityTimer > 0.f) {
@@ -132,7 +132,7 @@ void Player::update(const float dt, const sf::RenderWindow &window) {
 
 void Player::draw(sf::RenderWindow& window) {
     window.draw(objOnScreen);
-    heldWeapon.draw(window);
+    heldWeapon->draw(window);
     healthBar.draw(window);
 }
 
@@ -148,8 +148,8 @@ sf::View& Player::getPlayerView() {
     return playerView;
 }
 
-Weapon& Player::getWeapon() {
-    return heldWeapon;
+Weapon *Player::getWeapon() {
+    return heldWeapon.get();
 }
 
 void Player::Death() {
