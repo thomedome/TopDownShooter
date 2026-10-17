@@ -14,12 +14,16 @@
 
 sf::Font font("assets/fonts/LiberationSans-Regular.ttf");
 
+bool testingMap = false;
+
 // , sf::State::Fullscreen
 int main() {
     sf::RenderWindow window(sf::VideoMode({static_cast<unsigned>(windowHeight * aspectRatio), windowHeight}), "Top Down Shooter");
     window.setVerticalSyncEnabled(true); // VSync
 
     while (window.isOpen()) {
+
+        // Testing Map Definition
         const sf::Texture mapTexture {"assets/testMap.jpg"};
         sf::Sprite mapSprite(mapTexture);
 

@@ -46,6 +46,12 @@ add_executable(TopDownShooter
         src/classes/RangedEnemy.h
         src/classes/WaveManager.cpp
         src/classes/WaveManager.h
+        src/classes/Wall.cpp
+        src/classes/Wall.h
+        src/classes/Tile.cpp
+        src/classes/Tile.h
+        src/classes/MapManager.cpp
+        src/classes/MapManager.h
 )
 
 add_custom_command(
