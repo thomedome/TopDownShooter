@@ -3,8 +3,13 @@
 A (currently prototype) top down horde shooter written in C++17 & SFML. <br>
 Still working on it!
 
+### Featues
+- Single Weapon Gunplay
+- Multiple Enemies
+- Dynamic Wave Generation
+
 ### Planned Features
-- Multiple enemies
+- Different Types of enemies
 - Better Map(s) with obstacles
 - Multiple weapons
 - Audio & Presentation rework

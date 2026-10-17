@@ -16,12 +16,6 @@ sf::Font font("assets/fonts/LiberationSans-Regular.ttf");
 
 // , sf::State::Fullscreen
 int main() {
-
-    std::cout << std::filesystem::current_path() << '\n';
-
-    std::cout << std::filesystem::exists("assets") << '\n';
-    std::cout << std::filesystem::exists("TopDownShooter.exe") << '\n';
-
     sf::RenderWindow window(sf::VideoMode({static_cast<unsigned>(windowHeight * aspectRatio), windowHeight}), "Top Down Shooter");
     window.setVerticalSyncEnabled(true); // VSync
 
