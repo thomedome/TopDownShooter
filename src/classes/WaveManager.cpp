@@ -13,7 +13,7 @@
 
 WaveManager::WaveManager(const int initalisedBudget) : allocatedBudget(initalisedBudget) {
 
-    std::ifstream ifs("../src/config/config.json");
+    std::ifstream ifs("assets/config/config.json");
 
     if (!ifs.is_open()) {
         std::cerr << "Couldn't open config file..." << std::endl;

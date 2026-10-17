@@ -13,7 +13,7 @@
 #include "Weapon.h"
 
 Player::Player(const sf::Vector2f spawnPosition) {
-    std::ifstream ifs ("../src/config/config.json");
+    std::ifstream ifs ("assets/config/config.json");
 
     if (!ifs.is_open()) {
         std::cerr << "Cannot open player config..." << std::endl;

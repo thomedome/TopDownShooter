@@ -16,6 +16,12 @@ sf::Font font("assets/fonts/LiberationSans-Regular.ttf");
 
 // , sf::State::Fullscreen
 int main() {
+
+    std::cout << std::filesystem::current_path() << '\n';
+
+    std::cout << std::filesystem::exists("assets") << '\n';
+    std::cout << std::filesystem::exists("TopDownShooter.exe") << '\n';
+
     sf::RenderWindow window(sf::VideoMode({static_cast<unsigned>(windowHeight * aspectRatio), windowHeight}), "Top Down Shooter");
     window.setVerticalSyncEnabled(true); // VSync
 
@@ -32,7 +38,7 @@ int main() {
         sf::Text WaveObj{font, "Wave: 1"};
         sf::Text ScoreOBj{font, "Score: 0"};
 
-        std::ifstream ifs("../src/config/config.json");
+        std::ifstream ifs("assets/config/config.json");
 
         if (!ifs.is_open()) {
             std::cerr << "Couldn't open config file..." << std::endl;

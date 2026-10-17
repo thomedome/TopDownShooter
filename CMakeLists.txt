@@ -56,3 +56,11 @@ add_custom_command(
 )
 
 target_link_libraries(TopDownShooter PRIVATE SFML::Graphics)
+
+if(MINGW)
+    target_link_options(TopDownShooter PRIVATE
+            -static
+            -static-libgcc
+            -static-libstdc++
+    )
+endif()

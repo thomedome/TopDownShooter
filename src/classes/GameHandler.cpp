@@ -126,10 +126,6 @@ void GameHandler::updateEnemies(const float dt) {
                     int dmg = bullet.getDamage();
 
                     player.takeDamage(dmg);
-
-                    if (!player.isAlive()) {
-                        player.addScore(player.getScore());
-                    }
                 }
         } else {
 

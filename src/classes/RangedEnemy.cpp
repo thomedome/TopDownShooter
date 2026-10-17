@@ -22,7 +22,7 @@ void RangedEnemy::loadRangedStats(const nlohmann::json& json) {
 RangedEnemy::RangedEnemy(sf::Vector2f spawnPosition, Player &Target) : Enemy(spawnPosition, Target, Ranged) {
     Enemy::fulfillStats(Ranged);
 
-    std::ifstream ifs("../src/config/enemyConfig.json");
+    std::ifstream ifs("assets/config/enemyConfig.json");
 
     if (!ifs.is_open()) {
         std::cerr << "Couldn't open enemyConfig file..." << std::endl;

@@ -108,7 +108,7 @@ int Enemy::getScore() const {
 // Read from JSON
 void Enemy::fulfillStats(EnemyType eType) {
 
-    std::ifstream ifs("../src/config/enemyConfig.json");
+    std::ifstream ifs("assets/config/enemyConfig.json");
 
     if (!ifs.is_open()) {
         std::cerr << "Couldn't open enemyConfig file..." << std::endl;
