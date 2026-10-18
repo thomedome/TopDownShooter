@@ -10,6 +10,7 @@
 #include "classes/GameHandler.h"
 #include "classes/ProjectileManager.h"
 #include "json.hpp"
+#include "classes/MapManager.h"
 #include "classes/WaveManager.h"
 
 sf::Font font("assets/fonts/LiberationSans-Regular.ttf");
@@ -22,6 +23,10 @@ int main() {
     window.setVerticalSyncEnabled(true); // VSync
 
     while (window.isOpen()) {
+
+        MapManager mapManager;
+
+        mapManager.loadMap(1);
 
         // Testing Map Definition
         const sf::Texture mapTexture {"assets/testMap.jpg"};
@@ -56,7 +61,7 @@ int main() {
         sf::Clock dtClock;
 
         Player player {sf::Vector2f(1500, 1500)};
-        GameHandler gameHandler(player, window, mapSprite, waveManager);
+        GameHandler gameHandler(player, window, mapSprite, waveManager, mapManager);
 
         const auto onClose = [&window](const sf::Event::Closed&)
         {

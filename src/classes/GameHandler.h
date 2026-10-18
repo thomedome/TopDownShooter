@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "Enemy.h"
+#include "MapManager.h"
 #include "ProjectileManager.h"
 #include "WaveManager.h"
 
@@ -20,6 +21,7 @@ public:
     sf::RenderWindow& window;
     sf::Sprite mapSprite;
     WaveManager& wave_manager;
+    MapManager& map_manager;
     bool showFPS {};
     void tick(float dt);
     void updateEnemies(float dt);
@@ -31,7 +33,7 @@ public:
 
     // Cells will be start, start + size to index. so Cell [0, 0] will be between (0, 100)x and (0, 100)y
 
-    GameHandler(Player &playerRef, sf::RenderWindow& windowRef, const sf::Sprite& mapSpriteRef, WaveManager& wave_manager);
+    GameHandler(Player &playerRef, sf::RenderWindow& windowRef, const sf::Sprite& mapSpriteRef, WaveManager& wave_manager, MapManager& map_manager);
 };
 
 

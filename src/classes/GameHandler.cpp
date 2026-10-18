@@ -2,15 +2,19 @@
 
 #include <algorithm>
 
+#include "MapManager.h"
 #include "MeleeEnemy.h"
 #include "ProjectileManager.h"
 #include "RangedEnemy.h"
 #include "WaveManager.h"
 
+GameHandler::GameHandler(Player& playerRef, sf::RenderWindow& windowRef, const sf::Sprite& mapSpriteRef, WaveManager& wave_manager, MapManager& map_manager) : player(playerRef), window(windowRef), mapSprite(mapSpriteRef), wave_manager(wave_manager), map_manager(map_manager) {}
+
 void GameHandler::tick(const float dt) {
     window.setView(player.getPlayerView());
     window.clear(sf::Color::Black);
     // window.draw(mapSprite); // Draw the map lowest
+    map_manager.drawAll(window);
 
     player.update(dt, window);
     player.draw(window); // Draw the player + gun
@@ -18,8 +22,6 @@ void GameHandler::tick(const float dt) {
     updateEnemies(dt);
     projectileManager.updateProjectiles(dt, window);
 }
-
-GameHandler::GameHandler(Player& playerRef, sf::RenderWindow& windowRef, const sf::Sprite& mapSpriteRef, WaveManager& wave_manager) : player(playerRef), window(windowRef), mapSprite(mapSpriteRef), wave_manager(wave_manager) {}
 
 void GameHandler::updateEnemies(const float dt) {
 

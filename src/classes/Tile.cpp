@@ -4,11 +4,17 @@
 
 #include "Tile.h"
 
+#include <iostream>
 
 Tile::Tile (const int cellX, const int cellY) {
     Cell = {cellX, cellY};
-    objOnScreen.setOrigin({size.x / 2, size.y / 2});
     objOnScreen.setPosition({cellX * size.x, cellY * size.y});
+    // std::cout << cellX << ", " << cellY << std::endl;
+    // std::cout << objOnScreen.getPosition().x << ", " << objOnScreen.getPosition().y << std::endl;
+}
+
+void Tile::draw(sf::RenderWindow& window) {
+    window.draw(objOnScreen);
 }
 
 sf::FloatRect Tile::getBounds() {

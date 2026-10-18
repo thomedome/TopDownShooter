@@ -4,10 +4,8 @@
 
 #ifndef TOPDOWNSHOOTER_WALL_H
 #define TOPDOWNSHOOTER_WALL_H
-#include <SFML/Graphics.hpp>
 
 #include "Tile.h"
-
 
 class Wall : public Tile {
 public:

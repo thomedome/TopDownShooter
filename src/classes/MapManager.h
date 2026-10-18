@@ -12,6 +12,7 @@
 class MapManager {
 public:
     void loadMap(const int mapNum);
+    void drawAll(sf::RenderWindow& window);
 
     std::vector<Tile> getCurrentMapTiles();
 private:

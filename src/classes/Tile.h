@@ -15,11 +15,13 @@ public:
     bool getTraversable();
     std::array<int, 2> getCell() const;
 
+    void draw(sf::RenderWindow& window);
+
     Tile(const int cellX, const int cellY);
 
 protected:
     const sf::Vector2f size {150, 150};
-    sf::RectangleShape objOnScreen {};
+    sf::RectangleShape objOnScreen {size};
     std::array<int, 2> Cell;
     bool isTraversable {true};
 };
