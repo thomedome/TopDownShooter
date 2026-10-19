@@ -25,6 +25,7 @@ public:
     int getScore() const;
     bool getRestartFlag() const;
     sf::FloatRect getBounds() const;
+    sf::Vector2f getDesiredMovement();
 
 private:
     int damageInGun {};

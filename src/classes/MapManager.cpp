@@ -48,3 +48,7 @@ void MapManager::loadMap(const int mapNum) {
         y++;
     }
 }
+
+std::vector<Tile> MapManager::getCurrentMapTiles() {
+    return currentMaptiles;
+}

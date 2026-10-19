@@ -52,8 +52,8 @@ add_executable(TopDownShooter
         src/classes/Tile.h
         src/classes/MapManager.cpp
         src/classes/MapManager.h
-        src/classes/Walkable.cpp
         src/classes/Walkable.h
+        src/classes/Walkable.cpp
 )
 
 add_custom_command(

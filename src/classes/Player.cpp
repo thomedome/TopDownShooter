@@ -35,6 +35,29 @@ PlayerState Player::getPlayerState() const {
     return playerState;
 }
 
+sf::Vector2f Player::getDesiredMovement() {
+    sf::Vector2f movementVector;
+
+    using namespace sf::Keyboard;
+    if (isKeyPressed(Key::D)) {
+        movementVector.x += 1.f;
+    }
+
+    if (isKeyPressed(Key::A)) {
+        movementVector.x -= 1.f;
+    }
+
+    if (isKeyPressed(Key::S)) {
+        movementVector.y += 1.f;
+    }
+
+    if (isKeyPressed(Key::W)) {
+        movementVector.y -= 1.f;
+    }
+
+    return movementVector;
+}
+
 void Player::update(const float dt, const sf::RenderWindow &window) {
 
     if (!isAlive()) {
@@ -61,23 +84,25 @@ void Player::update(const float dt, const sf::RenderWindow &window) {
         // Handling Events
 
         sf::Vector2f movementVector;
+        //
+        // using namespace sf::Keyboard;
+        // if (isKeyPressed(Key::D)) {
+        //     movementVector.x += 1.f;
+        // }
+        //
+        // if (isKeyPressed(Key::A)) {
+        //     movementVector.x -= 1.f;
+        // }
+        //
+        // if (isKeyPressed(Key::S)) {
+        //     movementVector.y += 1.f;
+        // }
+        //
+        // if (isKeyPressed(Key::W)) {
+        //     movementVector.y -= 1.f;
+        // }
 
-        using namespace sf::Keyboard;
-        if (isKeyPressed(Key::D)) {
-            movementVector.x += 1.f;
-        }
-
-        if (isKeyPressed(Key::A)) {
-            movementVector.x -= 1.f;
-        }
-
-        if (isKeyPressed(Key::S)) {
-            movementVector.y += 1.f;
-        }
-
-        if (isKeyPressed(Key::W)) {
-            movementVector.y -= 1.f;
-        }
+        movementVector = getDesiredMovement();
 
         // Normalized Movement
         if (movementVector != sf::Vector2f(0.f, 0.f)) {
