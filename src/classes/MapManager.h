@@ -14,9 +14,9 @@ public:
     void loadMap(const int mapNum);
     void drawAll(sf::RenderWindow& window);
 
-    std::vector<Tile> getCurrentMapTiles();
+    std::vector<std::vector<Tile>> getCurrentMapTiles();
 private:
-    std::vector<Tile> currentMaptiles;
+    std::vector<std::vector<Tile>> currentMaptiles;
 
 };
 

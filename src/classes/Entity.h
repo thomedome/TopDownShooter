@@ -24,10 +24,13 @@ public:
     std::string getName();
     [[nodiscard]] bool isAlive() const;
     [[nodiscard]] sf::Vector2i getSpatialCell() const;
+    [[nodiscard]] sf::Vector2i getMapTile() const;
     [[nodiscard]] sf::Vector2f getPosition() const;
     void setPosition(const sf::Vector2f& position);
     virtual void takeDamage(int damage);
     bool isInvincible();
+    float getMoveSpeed();
+    void move(const sf::Vector2f pos);
     Team::Team getTeam() const;
 
 protected:
@@ -36,6 +39,7 @@ protected:
     float moveSpeed {250.f};
     sf::Vector2f mapPosition {};
     sf::Vector2i spatialCell{};
+    sf::Vector2i mapTile{};
     int health {100};
     int maxHealth {100};
     std::string name {};

@@ -11,6 +11,7 @@
 #include "../json.hpp"
 
 #include "Weapon.h"
+#include "../../cmake-build-release/_deps/sfml-src/include/SFML/Audio/Listener.hpp"
 
 Player::Player(const sf::Vector2f spawnPosition) {
     std::ifstream ifs ("assets/config/config.json");
@@ -105,19 +106,20 @@ void Player::update(const float dt, const sf::RenderWindow &window) {
         movementVector = getDesiredMovement();
 
         // Normalized Movement
-        if (movementVector != sf::Vector2f(0.f, 0.f)) {
-            playerState = Moving;
-
-            movementVector = movementVector.normalized();
-
-            const sf::Vector2f nextPos {movementVector * (moveSpeed * dt)};
-
-            mapPosition += nextPos;
-        } else {
-            playerState = Stationary;
-        }
+        // if (movementVector != sf::Vector2f(0.f, 0.f)) {
+        //     playerState = Moving;
+        //
+        //     movementVector = movementVector.normalized();
+        //
+        //     const sf::Vector2f nextPos {movementVector * (moveSpeed * dt)};
+        //
+        //     mapPosition += nextPos;
+        // } else {
+        //     playerState = Stationary;
+        // }
 
         spatialCell = sf::Vector2i(std::floor(static_cast<int>(mapPosition.x) / spacialCellSize), std::floor(static_cast<int>(mapPosition.y) / spacialCellSize));
+        mapTile = sf::Vector2i(std::floor(static_cast<int>(mapPosition.x) / 150), std::floor(static_cast<int>(mapPosition.y) / 150));
 
         // Clamp Player to Map
 

@@ -1,6 +1,7 @@
 #include "GameHandler.h"
 
 #include <algorithm>
+#include <iostream>
 
 #include "MapManager.h"
 #include "MeleeEnemy.h"
@@ -10,6 +11,34 @@
 
 GameHandler::GameHandler(Player& playerRef, sf::RenderWindow& windowRef, const sf::Sprite& mapSpriteRef, WaveManager& wave_manager, MapManager& map_manager) : player(playerRef), window(windowRef), mapSprite(mapSpriteRef), wave_manager(wave_manager), map_manager(map_manager) {}
 
+std::vector<Tile> GameHandler::getAdjacentTiles(const sf::Vector2i originTile) {
+    std::vector<Tile> adjacentTiles {};
+
+    const int x = originTile.x;
+    const int y = originTile.y;
+
+    std::vector allTiles {map_manager.getCurrentMapTiles()};
+    Tile Top = allTiles[y - 1][x];
+    Tile Bot = allTiles[y + 1][x];
+    Tile Right = allTiles[y][x + 1];
+    Tile Left = allTiles[y][x - 1];
+    Tile UpperLeft = allTiles[y - 1][x - 1];
+    Tile UpperRight = allTiles[y - 1][x + 1];
+    Tile BottomLeft = allTiles[y + 1][x - 1];
+    Tile BottomRight = allTiles[y + 1][x + 1];
+
+    adjacentTiles.push_back(Top);
+    adjacentTiles.push_back(Bot);
+    adjacentTiles.push_back(Right);
+    adjacentTiles.push_back(Left);
+    adjacentTiles.push_back(UpperLeft);
+    adjacentTiles.push_back(UpperRight);
+    adjacentTiles.push_back(BottomLeft);
+    adjacentTiles.push_back(BottomRight);
+
+    return adjacentTiles;
+}
+
 void GameHandler::tick(const float dt) {
     window.setView(player.getPlayerView());
     window.clear(sf::Color::Black);
@@ -17,6 +46,45 @@ void GameHandler::tick(const float dt) {
     map_manager.drawAll(window);
 
     player.update(dt, window);
+
+    sf::Vector2f desiredVector = player.getDesiredMovement();
+
+    // get nearby map tiles
+
+    if (desiredVector != sf::Vector2f(0.f, 0.f)) {
+
+        desiredVector = desiredVector.normalized();
+
+        sf::Vector2f movement = desiredVector * dt * player.getMoveSpeed();
+        std::vector adjacentTiles {getAdjacentTiles(player.getMapTile())};
+
+        // X Collision
+
+        sf::FloatRect predictedX = player.getBounds();
+        predictedX.position.x += movement.x;
+
+        for (auto tile : adjacentTiles) {
+            if (predictedX.findIntersection(tile.getBounds()) && tile.getTraversable() == false) {
+                movement.x = 0.f;
+                break;
+            }
+        }
+
+        // Y Collision
+
+        sf::FloatRect predictedY = player.getBounds();
+        predictedY.position.y += movement.y;
+
+        for (auto tile : adjacentTiles) {
+            if (predictedY.findIntersection(tile.getBounds()) && tile.getTraversable() == false) {
+                movement.y = 0.f;
+                break;
+            }
+        }
+
+        player.setPosition(player.getPosition() + movement) ;
+    }
+
     player.draw(window); // Draw the player + gun
 
     updateEnemies(dt);

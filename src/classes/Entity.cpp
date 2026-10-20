@@ -8,6 +8,10 @@ int Entity::getHealth() const {
     return health;
 }
 
+float Entity::getMoveSpeed() {
+    return moveSpeed;
+}
+
 int Entity::getMaxHealth() const {
     return maxHealth;
 }
@@ -22,6 +26,10 @@ bool Entity::isAlive() const {
 
 sf::Vector2i Entity::getSpatialCell() const {
     return spatialCell;
+}
+
+sf::Vector2i Entity::getMapTile() const {
+    return mapTile;
 }
 
 void Entity::takeDamage(int damage) {
@@ -46,4 +54,8 @@ bool Entity::isInvincible() {
 
 Team::Team Entity::getTeam() const {
     return entityTeam;
+}
+
+void Entity::move(const sf::Vector2f pos) {
+    mapPosition = pos;
 }

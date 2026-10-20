@@ -5,6 +5,7 @@
 #include "enums.h"
 #include "Weapon.h"
 #include "common.h"
+#include "Tile.h"
 
 class Player : public Entity {
 public:
@@ -26,6 +27,7 @@ public:
     bool getRestartFlag() const;
     sf::FloatRect getBounds() const;
     sf::Vector2f getDesiredMovement();
+    std::vector<Tile> getAdjacentTiles() const;
 
 private:
     int damageInGun {};

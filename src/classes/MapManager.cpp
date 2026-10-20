@@ -11,8 +11,10 @@
 
 void MapManager::drawAll(sf::RenderWindow &window) {
     // std::cout << currentMaptiles.size() << std::endl;
-    for (auto tile : currentMaptiles) {
-        tile.draw(window);
+    for (const auto& row : currentMaptiles) {
+        for (auto tile : row) {
+            tile.draw(window);
+        }
     }
 }
 
@@ -34,21 +36,25 @@ void MapManager::loadMap(const int mapNum) {
     int y = 0;
 
     while (std::getline(mapFile, currentLine)) {
+
+        std::vector<Tile> row;
+
         for (int x = 0; x < currentLine.length(); x++) {
             auto currentChar = currentLine[x];
             if (currentChar == '#') {
                 Wall newWall {x, y};
-                currentMaptiles.push_back(newWall);
+                row.push_back(newWall);
             } else if (currentChar == '.') {
                 Walkable newWalkable {x, y};
-                currentMaptiles.push_back(newWalkable);
+                row.push_back(newWalkable);
             }
         }
 
+        currentMaptiles.push_back(row);
         y++;
     }
 }
 
-std::vector<Tile> MapManager::getCurrentMapTiles() {
+std::vector<std::vector<Tile> > MapManager::getCurrentMapTiles() {
     return currentMaptiles;
 }
