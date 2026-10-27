@@ -8,8 +8,12 @@
 class Player;
 class Bullet;
 
-class Weapon {
+enum class WeaponType {
+    Pistol,
+    Shotgun
+};
 
+class Weapon {
     Entity& Parent;
 
 public:

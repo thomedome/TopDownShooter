@@ -45,8 +45,6 @@ void GameHandler::tick(const float dt) {
     // window.draw(mapSprite); // Draw the map lowest
     map_manager.drawAll(window);
 
-    player.update(dt, window);
-
     sf::Vector2f desiredVector = player.getDesiredMovement();
 
     // get nearby map tiles
@@ -58,17 +56,24 @@ void GameHandler::tick(const float dt) {
         sf::Vector2f movement = desiredVector * dt * player.getMoveSpeed();
         std::vector adjacentTiles {getAdjacentTiles(player.getMapTile())};
 
+        std::cout << "Movement vector: " << movement.x << "," << movement.y << std::endl;
+
         // X Collision
 
         sf::FloatRect predictedX = player.getBounds();
         predictedX.position.x += movement.x;
 
         for (auto tile : adjacentTiles) {
-            if (predictedX.findIntersection(tile.getBounds()) && tile.getTraversable() == false) {
-                movement.x = 0.f;
-                break;
+            if (tile.getTraversable() == false) {
+                auto intersection = predictedX.findIntersection(tile.getBounds());
+
+                if (intersection.has_value()) {
+                    movement.x = 0.f;
+                }
             }
         }
+
+        player.setPosition({player.getPosition().x + movement.x, player.getPosition().y});
 
         // Y Collision
 
@@ -76,15 +81,23 @@ void GameHandler::tick(const float dt) {
         predictedY.position.y += movement.y;
 
         for (auto tile : adjacentTiles) {
-            if (predictedY.findIntersection(tile.getBounds()) && tile.getTraversable() == false) {
-                movement.y = 0.f;
-                break;
+            if (tile.getTraversable() == false) {
+
+                auto intersection = predictedY.findIntersection(tile.getBounds());
+
+                if (intersection.has_value()) {
+                    movement.y = 0.f;
+                }
+
             }
         }
 
-        player.setPosition(player.getPosition() + movement) ;
+        std::cout << "Adjusted Movement vector: " << movement.x << "," << movement.y << std::endl;
+
+        player.setPosition({player.getPosition().x, player.getPosition().y + movement.y});
     }
 
+    player.update(dt, window);
     player.draw(window); // Draw the player + gun
 
     updateEnemies(dt);

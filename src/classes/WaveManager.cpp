@@ -32,6 +32,8 @@ void WaveManager::generateWave(Player& player) {
 
     currentWave.clear();
 
+    allocatedBudget = 0;
+
     while (allocatedBudget > 0) {
         const EnemyClassInfo affordedEnemy = getHighestEnemy(allocatedBudget);
 
